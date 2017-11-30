@@ -8,11 +8,14 @@ import { Router, Route, IndexRoute } from 'react-router';
 import App from './components/app';
 import HomePage from './components/home/homePage';
 import routes from './routes';
+import { fetchUser } from './actions/authActions';
 import '../node_modules/bootstrap/dist/css/bootstrap.css';
 
 const store = configureStore();
 const history = createHistory();
 const appRoutes = routes.map(route => <Route path={route.path} exact={true} component={route.component} key={route.id} />);
+
+store.dispatch(fetchUser());
 
 render(
     <Provider store={store}>

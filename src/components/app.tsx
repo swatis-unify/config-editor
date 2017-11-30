@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { withRouter } from 'react-router';
 
 import { MuiThemeProvider, getMuiTheme } from 'material-ui/styles';
 import LeftDrawer from './common/leftDrawer';
@@ -9,7 +10,7 @@ import RouteChanger from './common/routeChanger';
 import theme from '../theme';
 
 interface IAppProps {
-    loggedInUser: any;
+    currentRoute: any;
 }
 
 class App extends React.Component<IAppProps, null> {
@@ -18,8 +19,8 @@ class App extends React.Component<IAppProps, null> {
             <MuiThemeProvider muiTheme={getMuiTheme(theme)}>
                 <div className="body" style={{ display: 'flex' }}>
                     <RouteChanger />
-                    {this.props.loggedInUser.access_token && <TopAppBar />}
-                    {this.props.loggedInUser.access_token && <LeftDrawer />}
+                    {this.props.currentRoute.sidebar && <TopAppBar />}
+                    {this.props.currentRoute.sidebar && <LeftDrawer />}
                     <div className="container-fluid" style={{ marginTop: 44 }}>
                         {this.props.children}
                     </div>
@@ -31,8 +32,8 @@ class App extends React.Component<IAppProps, null> {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        loggedInUser: state.loggedInUser
+        currentRoute: state.currentRoute
     };
 };
 
-export default connect(mapStateToProps)(App);
+export default withRouter(connect(mapStateToProps)(App));

@@ -35,7 +35,7 @@ class LeftDrawer extends React.Component<ILeftDrawerProps, null> {
         return { color: '#757575' };
     }
     public render(): JSX.Element {
-        const menus = routes.map(route => {
+        const menus = _.filter(routes, { sidebar: true }).map(route => {
             return <ListItem
                 key={route.id}
                 primaryText={this.props.isDrawerOpen ? route.title : ""}

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { withRouter } from 'react-router';
 
 class PartnerConfigPage extends React.Component {
     public render(): JSX.Element {
@@ -10,4 +11,4 @@ class PartnerConfigPage extends React.Component {
     }
 }
 
-export default PartnerConfigPage;
+export default withRouter(PartnerConfigPage);

@@ -16,10 +16,7 @@ class RouteChanger extends React.Component<IRouteChangerProps, null> {
     }
     public componentWillReceiveProps(nextProps) {
         if (this.props.currentRoute !== nextProps.currentRoute) {
-            console.log('redirect ((to new route:', nextProps.currentRoute.path);
-            console.log(this.props);
             this.props.history.push(nextProps.currentRoute.path);
-            // window.history.push(nextProps.currentRoute.path);
         }
     }
 

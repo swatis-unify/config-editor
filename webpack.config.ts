@@ -1,6 +1,10 @@
 import * as path from 'path';
 import * as webpack from 'webpack';
 
+// for custom apis
+import axios from 'axios';
+import * as session from 'express-session';
+
 // Plugins
 // import * as HtmlWebpackPlugin from 'html-webpack-plugin';
 import * as ExtractTextPlugin from 'extract-text-webpack-plugin';
@@ -87,6 +91,7 @@ const config: webpack.Configuration = {
     plugins: plugins,
     devServer: {
         compress: true,
+        hot: true,
         contentBase: sourcePath,
         historyApiFallback: true,
         overlay: {
@@ -96,9 +101,64 @@ const config: webpack.Configuration = {
         stats: 'normal',
         watchContentBase: true,
         disableHostCheck: true,
-        headers: {
-            "Access-Control-Allow-Origin": '*',
-            "Access-Control-Request-Headers": '*'
+        before(app) {
+            app.use(session({ secret: '123abc' }));
+            app.get('/accesstoken', (req, res) => {
+                const code = req.query.code;
+                const params = {
+                    client_id: '2e073bdb7347eaf52902',
+                    client_secret: '775ef3c1c85f5334957f06fb14037d341ebd045b',
+                    code: code
+                };
+                const query = Object.keys(params)
+                    .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+                    .join('&');
+
+                req.session.user = {};
+                axios({
+                    method: 'post',
+                    url: `https://github.com/login/oauth/access_token?${query}`,
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'credentials': 'include'
+                    }
+                }).then((response) => {
+                    console.log('success: ');
+                    req.session.user.access_token = response.data.access_token;
+                    res.json(response.data);
+                }).catch((error) => {
+                    req.session.user.access_token = '';
+                    console.log('Error');
+                    res.json(error);
+                });
+            });
+
+            app.get('/user', (req, res) => {
+                if (!(req.session.user && req.session.user.access_token)) {
+                    res.status(401).send('Login required');
+                } else {
+                    const params = {
+                        access_token: req.session.user.access_token
+                    };
+                    const query = Object.keys(params)
+                        .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+                        .join('&');
+
+                    axios({
+                        method: 'get',
+                        url: `https://github.com/repos/swatis-unify/profileBuilder/branches?${query}`,
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                    }).then((response) => {
+                        res.json(response.data);
+                    }).catch((error) => {
+                        res.status(500).send('Failed to fetch branches');
+                    });
+                }
+            });
         }
     },
     node: {

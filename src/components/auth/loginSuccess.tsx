@@ -16,7 +16,6 @@ interface ILoginSuccessProps {
 class LoginSuccessPage extends React.Component<ILoginSuccessProps, null> {
 
     public componentDidMount() {
-        console.log('Login success mounted');
         const params = new URL(window.location.href).searchParams;
         const state = params.get('state');
         const code = params.get('code');
@@ -32,7 +31,7 @@ class LoginSuccessPage extends React.Component<ILoginSuccessProps, null> {
 
     public render(): JSX.Element {
         return (<div>
-            {/* <CircularProgress size={80} thickness={7} /> */}
+            <CircularProgress size={80} thickness={7} />
         </div>);
     }
 

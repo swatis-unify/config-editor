@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { withRouter } from 'react-router';
 
 import * as layoutActions from '../../actions/layoutActions';
 
@@ -10,11 +11,11 @@ interface IHomePageProps {
 }
 
 class HomePage extends React.Component<IHomePageProps, null> {
-    public componentWillMount() {
-        if (!this.props.loggedInUser.access_token) {
-            this.props.actions.setRoute('/login');
-        }
-    }
+    // public componentWillMount() {
+    //     if (!this.props.loggedInUser.access_token) {
+    //         this.props.actions.setRoute('/login');
+    //     }
+    // }
     public render(): JSX.Element {
         return (
             <div>
@@ -34,4 +35,4 @@ const mapDispatchToProps = (dispatch) => {
         actions: bindActionCreators(layoutActions, dispatch)
     });
 };
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HomePage));

@@ -16,7 +16,8 @@ const routes = [{
     title: 'Home',
     id: 'home-page',
     exact: true,
-    icon: Home
+    icon: Home,
+    sidebar: true
 }, {
     path: '/login',
     component: LogInPage,
@@ -24,7 +25,7 @@ const routes = [{
     id: 'login-page',
     exact: true,
     icon: null,
-    noSideBar: true
+    sidebar: false
 }, {
     path: '/loginsuccess',
     component: LogInSuccessPage,
@@ -32,19 +33,14 @@ const routes = [{
     id: 'login-success',
     exact: true,
     icon: null,
-    noSideBar: true
+    sidebar: false
 }, {
     path: '/partnerconfig',
     component: PartnerConfigPage,
     title: 'Partner Config',
     id: 'partner-config',
-    icon: PartnerConfig
-}, {
-    path: '/businessrules',
-    component: BusinessRulesPage,
-    title: 'Business Rules',
-    id: 'business-rules',
-    icon: BusinessGroup
+    icon: PartnerConfig,
+    sidebar: true
 }];
 
 export default routes;

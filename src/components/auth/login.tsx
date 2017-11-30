@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import authConfig from './authConfig';
 
 import { Card, CardHeader, CardText, RaisedButton } from 'material-ui';
@@ -8,10 +7,9 @@ import ActionHome from 'material-ui/svg-icons/action/home';
 class LogInPage extends React.Component<null, null> {
     constructor(props, context) {
         super(props, context);
-
-        this.startLoginProcess = this.startLoginProcess.bind(this);
     }
     private startLoginProcess() {
+        console.log('start login called');
         // redirect to github
         const authUrl = authConfig.authUrl;
         const params = {
@@ -37,7 +35,7 @@ class LogInPage extends React.Component<null, null> {
                         <RaisedButton
                             primary={true}
                             label={'Login With GitHub'}
-                            onClick={this.startLoginProcess()}
+                            onClick={this.startLoginProcess}
                             icon={<ActionHome />}
                         />
                     </CardText>
