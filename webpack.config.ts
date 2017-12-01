@@ -1,6 +1,9 @@
 import * as path from 'path';
 import * as webpack from 'webpack';
 
+import Github from './src/helpers/github';
+import apiConfig from './api_config';
+
 // for custom apis
 import axios from 'axios';
 import * as session from 'express-session';
@@ -105,59 +108,42 @@ const config: webpack.Configuration = {
             app.use(session({ secret: '123abc' }));
             app.get('/accesstoken', (req, res) => {
                 const code = req.query.code;
-                const params = {
-                    client_id: '2e073bdb7347eaf52902',
-                    client_secret: '775ef3c1c85f5334957f06fb14037d341ebd045b',
-                    code: code
-                };
-                const query = Object.keys(params)
-                    .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
-                    .join('&');
-
                 req.session.user = {};
-                axios({
-                    method: 'post',
-                    url: `https://github.com/login/oauth/access_token?${query}`,
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'credentials': 'include'
-                    }
-                }).then((response) => {
-                    console.log('success: ');
-                    req.session.user.access_token = response.data.access_token;
-                    res.json(response.data);
-                }).catch((error) => {
-                    req.session.user.access_token = '';
-                    console.log('Error');
-                    res.json(error);
-                });
+                Github.instance.getAccessToken(apiConfig.clientId, apiConfig.clientSecret, code)
+                    .then((response) => {
+                        req.session.user.loggedIn = true;
+                        res.json({ loggedIn: true });
+                    })
+                    .catch((error) => {
+                        req.session.user.loggedIn = false;
+                        console.log('Error: ', error);
+                        res.status(500).send('Failed to login');
+                    });
             });
 
-            app.get('/user', (req, res) => {
-                if (!(req.session.user && req.session.user.access_token)) {
+            app.get('/branches', (req, res) => {
+                if (!(req.session.user && req.session.user.loggedIn)) {
                     res.status(401).send('Login required');
                 } else {
-                    const params = {
-                        access_token: req.session.user.access_token
-                    };
-                    const query = Object.keys(params)
-                        .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
-                        .join('&');
-
-                    axios({
-                        method: 'get',
-                        url: `https://github.com/repos/swatis-unify/profileBuilder/branches?${query}`,
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        }
-                    }).then((response) => {
-                        res.json(response.data);
-                    }).catch((error) => {
-                        res.status(500).send('Failed to fetch branches');
-                    });
+                    Github.instance.getBranches(apiConfig.repoOwner, apiConfig.repoName)
+                        .then((branches) => {
+                            res.json(branches);
+                        })
+                        .catch((error) => {
+                            res.status(500).send('failed to fetch branches');
+                        });
                 }
+            });
+
+            app.get('/contents', (req, res) => {
+                const branch = req.query.branch;
+                Github.instance.getContents(apiConfig.repoOwner, apiConfig.repoName, apiConfig.sourcePath, branch)
+                    .then((contents) => {
+                        res.json(contents);
+                    })
+                    .catch((error) => {
+                        res.status(500).send('failed to fetch contents');
+                    });
             });
         }
     },

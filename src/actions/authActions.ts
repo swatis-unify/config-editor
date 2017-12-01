@@ -5,16 +5,16 @@ import axios from 'axios';
 import * as layoutActions from './layoutActions';
 import authConfig from './authConfig';
 
-const loginSuccess = (token) => {
-    return { type: types.LOGIN_SUCCESS, token };
+const loginSuccess = (user) => {
+    return { type: types.LOGIN_SUCCESS, user };
 };
 
 const loginError = () => {
     return { type: types.LOGIN_FAILURE };
 };
 
-const updateUser = (user) => {
-    return { type: types.UPDATE_USER, user };
+const updateBranches = (branches) => {
+    return { type: types.UPDATE_BRANCHES, branches };
 };
 
 export const fetchAccessToken = (code: string, state: string) => {
@@ -27,22 +27,20 @@ export const fetchAccessToken = (code: string, state: string) => {
     return (dispatch) => {
         return axios.get(`/accesstoken?${query}`)
             .then((response) => {
-                console.log('success: ', response);
                 dispatch(loginSuccess(response.data));
-                dispatch(fetchUser());
+                dispatch(fetchBranches());
             }).catch((error) => {
-                console.log('Error: ', error);
                 dispatch(loginError());
             });
     };
 };
 
-export const fetchUser = () => {
+export const fetchBranches = () => {
     return (dispatch) => {
-        return axios.get('/user')
+        return axios.get('/branches')
             .then((response) => {
                 console.log('success: ', response);
-                dispatch(updateUser(response.data));
+                dispatch(updateBranches({ branches: response.data }));
             }).catch((error) => {
                 // user not logged in
                 if (error.request.status === 401) {

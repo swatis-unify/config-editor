@@ -8,5 +8,6 @@ export default {
     businessRules: [],
     isDrawerOpen: false,
     currentRoute: initialRoute,
-    loggedInUser: {}
+    loggedInUser: {},
+    files: []
 };
