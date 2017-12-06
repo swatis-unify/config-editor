@@ -14,6 +14,17 @@ interface ILeftDrawerProps {
     actions: any;
 }
 
+const drawerStyle: React.CSSProperties = {
+    position: 'fixed',
+    top: 40,
+    height: '100vh',
+    backgroundColor: '#333',
+    zIndex: 1000,
+    transition: 'width 0.5s ease-in-out',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap'
+};
+
 class LeftDrawer extends React.Component<ILeftDrawerProps, null> {
     constructor(props, context) {
         super(props, context);
@@ -22,26 +33,31 @@ class LeftDrawer extends React.Component<ILeftDrawerProps, null> {
         this.getItemStyle = this.getItemStyle.bind(this);
     }
     private getDrawerStyle(): React.CSSProperties {
-        const style = { position: 'relative', top: 40, height: '100vh', backgroundColor: '#333333' };
-        return this.props.isDrawerOpen ? _.assign({ width: 250 }, style) : _.assign({ width: 50 }, style);
+        return this.props.isDrawerOpen ? _.assign({ width: 220 }, drawerStyle) : _.assign({ width: 50 }, drawerStyle);
     }
     private onMenuClick(route) {
         this.props.actions.setRoute(route);
     }
     private getItemStyle(route) {
         if (route.path === this.props.currentRoute.path) {
-            return { color: 'green' };
+            return { color: '#009688' };
         }
         return { color: '#757575' };
+    }
+    private getIconColor(route) {
+        if (route.path === this.props.currentRoute.path) {
+            return '#009688';
+        }
+        return '#757575';
     }
     public render(): JSX.Element {
         const menus = _.filter(routes, { sidebar: true }).map(route => {
             return <ListItem
                 key={route.id}
-                primaryText={this.props.isDrawerOpen ? route.title : ""}
+                primaryText={route.title}
                 style={this.getItemStyle(route)}
                 onClick={this.onMenuClick.bind(null, route)}
-                leftIcon={route.icon ? <route.icon /> : null}
+                leftIcon={route.icon ? <route.icon color={this.getIconColor(route)} /> : null}
             />;
         });
         return (

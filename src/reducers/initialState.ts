@@ -9,5 +9,7 @@ export default {
     isDrawerOpen: false,
     currentRoute: initialRoute,
     loggedInUser: {},
-    files: []
+    feeds: [],
+    configs: [],
+    callsInProgress: 0
 };

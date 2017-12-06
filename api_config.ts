@@ -6,5 +6,5 @@ export default {
     state: '1234abcd',
     repoOwner: 'swatis-unify',
     repoName: 'profileBuilder',
-    sourcePath: 'web/src/actions'
+    sourcePath: 'configs'
 };

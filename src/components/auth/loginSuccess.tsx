@@ -6,8 +6,6 @@ import * as authActions from '../../actions/authActions';
 import * as layoutActions from '../../actions/layoutActions';
 import authConfig from './authConfig';
 
-import { CircularProgress } from 'material-ui';
-
 interface ILoginSuccessProps {
     authActions: any;
     layoutActions: any;
@@ -30,9 +28,7 @@ class LoginSuccessPage extends React.Component<ILoginSuccessProps, null> {
     }
 
     public render(): JSX.Element {
-        return (<div>
-            <CircularProgress size={80} thickness={7} />
-        </div>);
+        return (<div />);
     }
 
 }

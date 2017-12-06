@@ -44,7 +44,8 @@ export default class Github {
     public async getAccessToken(clientId: string, clientSecret: string, code: string): Promise<IAccessToken> {
         const params = { client_id: clientId, client_secret: clientSecret, code: code };
         const url = `${this.baseAuthUrl}/login/oauth/access_token`;
-        const accessToken = await requestExecutor('post', url, params, null);
+        const accessToken: any = await requestExecutor('post', url, params, null);
+        this.accessToken = accessToken.access_token;
         return accessToken as IAccessToken;
     }
     public async getBranches(repoOwner: string, repoName: string): Promise<IBranch[]> {
@@ -53,10 +54,27 @@ export default class Github {
         const branches = await requestExecutor('get', url, params, null);
         return branches as IBranch[];
     }
+    public async getConfig(url: string): Promise<any[]> {
+        const params = { access_token: this._accessToken };
+        const config = await requestExecutor('get', url, params, null);
+        return config as any[];
+    }
     public async getContents(repoOwner: string, repoName: string, path: string, branchName: string): Promise<IFile[]> {
+        const data = [];
+        const calls: Promise<any>[] = [];
         const params = { access_token: this._accessToken, ref: branchName };
         const url = `${this.baseAPIUrl}/repos/${repoOwner}/${repoName}/contents/${path}`;
         const files = await requestExecutor('get', url, params, null);
         return files as IFile[];
+        // return requestExecutor('get', url, params, null).then(async (files: IFile[]) => {
+        //     _.forEach(files, (file: IFile) => {
+        //         if (file.download_url) {
+        //             calls.push(requestExecutor('get', files[0].download_url, null, null).then((result) => data.push(result)));
+        //         }
+        //     });
+        //     return Promise.all(calls).then(() => {
+        //         return data;
+        //     });
+        // });
     }
 }

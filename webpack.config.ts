@@ -130,6 +130,7 @@ const config: webpack.Configuration = {
                             res.json(branches);
                         })
                         .catch((error) => {
+                            console.log('error: ', error);
                             res.status(500).send('failed to fetch branches');
                         });
                 }
@@ -143,6 +144,17 @@ const config: webpack.Configuration = {
                     })
                     .catch((error) => {
                         res.status(500).send('failed to fetch contents');
+                    });
+            });
+
+            app.get('/config', (req, res) => {
+                const url = req.query.url;
+                Github.instance.getConfig(url)
+                    .then((result) => {
+                        res.json(result);
+                    })
+                    .catch((error) => {
+                        res.status(500).send('failed to fetch config');
                     });
             });
         }

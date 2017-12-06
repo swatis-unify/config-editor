@@ -4,6 +4,9 @@ import authConfig from './authConfig';
 import { Card, CardHeader, CardText, RaisedButton } from 'material-ui';
 import ActionHome from 'material-ui/svg-icons/action/home';
 
+import GithubIcon from '../common/githubIcon';
+import './loginStyles.less';
+
 class LogInPage extends React.Component<null, null> {
     constructor(props, context) {
         super(props, context);
@@ -28,18 +31,20 @@ class LogInPage extends React.Component<null, null> {
     }
     public render(): JSX.Element {
         return (
-            <div>
-                <Card>
-                    <CardText style={{ textAlign: 'center' }}>
-                        <h3>Login with GitHub to get started</h3>
-                        <RaisedButton
-                            primary={true}
-                            label={'Login With GitHub'}
-                            onClick={this.startLoginProcess}
-                            icon={<ActionHome />}
-                        />
-                    </CardText>
-                </Card>
+            <div className="login-wrapper">
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Card className="col-md-5">
+                        <CardText style={{ textAlign: 'center' }}>
+                            <h3>Login with GitHub to get started</h3>
+                            <RaisedButton
+                                primary={true}
+                                label={'Login With GitHub'}
+                                onClick={this.startLoginProcess}
+                                icon={<GithubIcon width={20} height={20} />}
+                            />
+                        </CardText>
+                    </Card>
+                </div>
             </div>
         );
     }

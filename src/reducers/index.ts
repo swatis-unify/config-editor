@@ -3,14 +3,16 @@ import businessRules from './businessRulesReducer';
 import isDrawerOpen from './drawerReducer';
 import currentRoute from './routeReducer';
 import loggedInUser from './userReducer';
-import files from './filesReducer';
+import feeds from './feedsReducer';
+import callsInProgress from './callsReducer';
 
 const rootReducer = combineReducers({
     businessRules,
     isDrawerOpen,
     currentRoute,
     loggedInUser,
-    files
+    feeds,
+    callsInProgress
 });
 
 export default rootReducer;
