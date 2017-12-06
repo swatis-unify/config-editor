@@ -1,8 +1,16 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 const requestExecutor = async <T extends {}>(method: string, url: string, params: any, data: any): Promise<T> => {
-    const headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+    let headers = { 
+        'Content-Type': 'application/json', 
+        'Accept': 'application/json',
+        'Authorization': ''
+    };
 
+    if(params.access_token != null){
+        headers.Authorization = 'token ' + params.access_token;
+    }
+    
     const axiosConfig: AxiosRequestConfig = {
         method: method,
         url: url,

@@ -9,5 +9,6 @@ export default {
     isDrawerOpen: false,
     currentRoute: initialRoute,
     loggedInUser: {},
-    files: []
+    files: [],
+    selectedFile: { filePath: "", contents: "", sha: "" },
 };

@@ -4,13 +4,15 @@ import isDrawerOpen from './drawerReducer';
 import currentRoute from './routeReducer';
 import loggedInUser from './userReducer';
 import files from './filesReducer';
+import fileContents from './fileContentsReducer';
 
 const rootReducer = combineReducers({
     businessRules,
     isDrawerOpen,
     currentRoute,
     loggedInUser,
-    files
+    files,
+    fileContents 
 });
 
 export default rootReducer;

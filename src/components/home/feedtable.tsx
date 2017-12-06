@@ -11,35 +11,87 @@ import {
 } from 'material-ui';
 
 interface IFeedTableProps {
+    actions: any;
     files: any[];
+    fileContents: any;
 }
 
-const FeedTable = (props: IFeedTableProps) => {
-    const rows = props.files.map(file => {
-        return (
-            <TableRow striped={true} selectable={false} key={file.name}>
-                <TableRowColumn>{file.name}</TableRowColumn>
-                <TableRowColumn>{file.path}</TableRowColumn>
-                <TableRowColumn>{file.download_url}</TableRowColumn>
-            </TableRow>
-        );
+interface IFeedTableState {
+    selectedFile: any;
+    fileContents: any;
+}
 
-    });
-    return (
-        <Table fixedHeader={true} selectable={false}>
-            <TableHeader adjustForCheckbox={false}>
-                <TableRow selectable={false}>
-                    <TableHeaderColumn>File Name</TableHeaderColumn>
-                    <TableHeaderColumn>File Path</TableHeaderColumn>
-                    <TableHeaderColumn>Download Link</TableHeaderColumn>
-                </TableRow>
-            </TableHeader>
-            <TableBody stripedRows={true} displayRowCheckbox={false}>
-                {...rows}
-            </TableBody>
-        </Table>
-    );
-};
+class FeedTable extends React.Component<IFeedTableProps, IFeedTableState> {
+
+    constructor(props, context) {
+        super(props, context);
+
+        this.state = {
+            selectedFile: null,
+            fileContents: { filePath: "", contents: "", sha: "" }
+        };
+
+        this.fileSelected = this.fileSelected.bind(this);
+    }
+
+    public componentWillReceiveProps(nextProps) {
+        if (this.props.fileContents !== nextProps.fileContents) {
+            this.setState({
+                selectedFile: this.state.selectedFile,
+                fileContents: {
+                    filePath: nextProps.fileContents.filePath,
+                    contents: nextProps.fileContents.contents,
+                    sha: nextProps.fileContents.sha
+                }
+            });
+        }
+    }
+
+    private updateFileContents(){
+        this.props.actions.updateFileContents(this.state.fileContents.filePath,
+                                              this.state.fileContents.contents,
+                                              this.state.fileContents.sha);
+    }
+
+    private fileSelected(item) {
+        let filePath = item.path;
+        this.props.actions.getFileContents(filePath);
+    }
+
+    private fileContentChanged(event) {
+        this.setState({
+            fileContents: {
+                filePath: this.state.fileContents.filePath,
+                contents: event.target.value,
+                sha: this.state.fileContents.sha
+            }
+        });
+    }
+
+    public render(): JSX.Element {
+
+        const rows = this.props.files.map(file => {
+            return (
+                <li key={file.path}>
+                    <a onClick={(e) => this.fileSelected(file)}>{file.name}</a>
+                </li>
+            );
+        });
+        return (
+            <div>
+                <ul>
+                    {...rows}
+                </ul>
+                <textarea rows={10} 
+                          cols={50} 
+                          onChange={(e) => this.fileContentChanged(e)} 
+                          value={this.state.fileContents.contents}></textarea>
+                <input type="button" value="Save" onClick={(e) => this.updateFileContents()} />
+            </div>
+        );
+    }
+
+}
 
 export default FeedTable;
 

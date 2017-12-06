@@ -7,7 +7,7 @@ const filesReducer = (state = initialState.files, action) => {
     switch (action.type) {
         case types.FETCH_FILES_SUCCESS:
             return action.files;
-
+        
         default:
             return state;
     }

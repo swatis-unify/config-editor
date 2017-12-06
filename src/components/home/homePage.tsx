@@ -15,6 +15,7 @@ interface IHomePageProps {
     actions: any;
     loggedInUser: any;
     files: { files: any[] };
+    fileContents: { filePath: "", contents: "" };
 }
 
 interface IHomePageState {
@@ -33,7 +34,6 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
     }
     private selectBranch(event, index, branch) {
         this.setState({ branch });
-
         this.props.actions.fetchContents(branch);
     }
     public render(): JSX.Element {
@@ -51,7 +51,13 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                     {...options}
                 </SelectField>
 
-                {this.props.files.files && this.props.files.files.length && <FeedTable files={this.props.files.files} />}
+                {
+                    this.props.files.files && 
+                    this.props.files.files.length && 
+                    <FeedTable files={this.props.files.files} 
+                               actions={this.props.actions} 
+                               fileContents={this.props.fileContents} />
+                 }
             </div>
         );
     }
@@ -60,7 +66,8 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 const mapStateToProps = (state, ownProps) => {
     return {
         loggedInUser: state.loggedInUser,
-        files: state.files
+        files: state.files,
+        fileContents: state.fileContents
     };
 };
 const mapDispatchToProps = (dispatch) => {

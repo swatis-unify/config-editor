@@ -7,6 +7,7 @@ import apiConfig from './api_config';
 // for custom apis
 import axios from 'axios';
 import * as session from 'express-session';
+import * as bodyParser from 'body-parser';
 
 // Plugins
 // import * as HtmlWebpackPlugin from 'html-webpack-plugin';
@@ -106,6 +107,8 @@ const config: webpack.Configuration = {
         disableHostCheck: true,
         before(app) {
             app.use(session({ secret: '123abc' }));
+            let jsonParser = bodyParser.json();
+
             app.get('/accesstoken', (req, res) => {
                 const code = req.query.code;
                 req.session.user = {};
@@ -135,6 +138,17 @@ const config: webpack.Configuration = {
                 }
             });
 
+            app.get('/fileContents', (req, res) => {
+
+                Github.instance.getContents(apiConfig.repoOwner, apiConfig.repoName, req.query.filePath, "test")
+                .then((contents) => {
+                    res.json(contents);
+                })
+                .catch((error) => {
+                    res.status(500).send('failed to fetch contents');
+                });
+            });
+
             app.get('/contents', (req, res) => {
                 const branch = req.query.branch;
                 Github.instance.getContents(apiConfig.repoOwner, apiConfig.repoName, apiConfig.sourcePath, branch)
@@ -144,6 +158,25 @@ const config: webpack.Configuration = {
                     .catch((error) => {
                         res.status(500).send('failed to fetch contents');
                     });
+            });
+
+            app.post('/fileContents', jsonParser, (req, res)=> {
+                
+                console.log("POST FILE CONTENTS");
+                console.log(req.body);
+
+                Github.instance.updateContents(apiConfig.repoOwner, 
+                                               apiConfig.repoName, 
+                                               req.body.filePath, 
+                                               "test", 
+                                               req.body.updatedContents, 
+                                               req.body.sha)
+                .then(() => {
+                    res.json({"status" : "OK"});
+                })
+                .catch((error) => {
+                    res.status(500).send(JSON.stringify(error));
+                });
             });
         }
     },

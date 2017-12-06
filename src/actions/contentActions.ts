@@ -12,6 +12,39 @@ export const fetchFilesFailure = () => {
     return { type: types.FETCH_FILES_FAILURE };
 };
 
+export const getFileContentsSuccess = (filePath, fileContents, sha) => {
+    return { type: types.GET_FILE_CONTENTS, filePath: filePath, contents: fileContents, sha: sha };
+};
+
+export const updateFileContentSuccess = (filePath, updatedContents, sha) => {
+    return { type: types.UPDATE_FILE_CONTENTS, filePath: filePath, contents: updatedContents, sha: sha };
+}
+
+export const getFileContents = (filePath) => {
+
+    return (dispatch) => {
+        return axios
+        .get('/fileContents', {params: {filePath}})
+        .then((response) => {
+            var fileContents = atob(response.data.content);
+            dispatch(getFileContentsSuccess(filePath, fileContents, response.data.sha));    
+        });
+    }
+
+}
+
+export const updateFileContents = (filePath, updatedContents, sha) => {
+
+    return (dispatch) => {
+        return axios
+        .post('/fileContents', {filePath, updatedContents, sha})
+        .then((response) => {
+            dispatch(updateFileContentSuccess(filePath, updatedContents, sha));    
+        });
+    }
+
+}
+
 export const fetchContents = (branch) => {
     return (dispatch) => {
         return axios.get('/contents', { params: { branch } })
