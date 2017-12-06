@@ -141,12 +141,12 @@ const config: webpack.Configuration = {
             app.get('/fileContents', (req, res) => {
 
                 Github.instance.getContents(apiConfig.repoOwner, apiConfig.repoName, req.query.filePath, "test")
-                .then((contents) => {
-                    res.json(contents);
-                })
-                .catch((error) => {
-                    res.status(500).send('failed to fetch contents');
-                });
+                    .then((contents) => {
+                        res.json(contents);
+                    })
+                    .catch((error) => {
+                        res.status(500).send('failed to fetch contents');
+                    });
             });
 
             app.get('/contents', (req, res) => {
@@ -160,23 +160,22 @@ const config: webpack.Configuration = {
                     });
             });
 
-            app.post('/fileContents', jsonParser, (req, res)=> {
-                
+            app.post('/fileContents', jsonParser, (req, res) => {
                 console.log("POST FILE CONTENTS");
                 console.log(req.body);
 
-                Github.instance.updateContents(apiConfig.repoOwner, 
-                                               apiConfig.repoName, 
-                                               req.body.filePath, 
-                                               "test", 
-                                               req.body.updatedContents, 
-                                               req.body.sha)
-                .then(() => {
-                    res.json({"status" : "OK"});
-                })
-                .catch((error) => {
-                    res.status(500).send(JSON.stringify(error));
-                });
+                Github.instance.updateContents(apiConfig.repoOwner,
+                    apiConfig.repoName,
+                    req.body.filePath,
+                    "test",
+                    req.body.contents,
+                    req.body.sha)
+                    .then(() => {
+                        res.json({ "status": "OK" });
+                    })
+                    .catch((error) => {
+                        res.status(500).send(JSON.stringify(error));
+                    });
             });
         }
     },

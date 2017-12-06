@@ -79,8 +79,6 @@ export default class Github {
         fileSha: string): Promise<void> {
         const params = { access_token: this._accessToken };
         const url = `${this.baseAPIUrl}/repos/${repoOwner}/${repoName}/contents/${path}`;
-        
-        var base64EncodedContent: string = btoa(fileContents);
 
         var data = {
             "message": "my commit message",
@@ -88,15 +86,16 @@ export default class Github {
                 "name": "Ram anam",
                 "email": "ram@introp.net"
             },
-            "content": base64EncodedContent,
+            "content": fileContents,
             "sha": fileSha,
             "branch": branchName
         };
 
         const result: any = await requestExecutor('put', url, params, data);
+        return result;
     }
 
-    public async putContents() {
+    // public async putContents() {
 
-    }
+    // }
 }

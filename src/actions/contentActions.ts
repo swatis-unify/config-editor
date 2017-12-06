@@ -24,26 +24,27 @@ export const getFileContents = (filePath) => {
 
     return (dispatch) => {
         return axios
-        .get('/fileContents', {params: {filePath}})
-        .then((response) => {
-            var fileContents = atob(response.data.content);
-            dispatch(getFileContentsSuccess(filePath, fileContents, response.data.sha));    
-        });
+            .get('/fileContents', { params: { filePath } })
+            .then((response) => {
+                var fileContents = atob(response.data.content);
+                dispatch(getFileContentsSuccess(filePath, fileContents, response.data.sha));
+            });
     }
 
-}
+};
 
 export const updateFileContents = (filePath, updatedContents, sha) => {
+    const contents = window.btoa(updatedContents);
 
     return (dispatch) => {
         return axios
-        .post('/fileContents', {filePath, updatedContents, sha})
-        .then((response) => {
-            dispatch(updateFileContentSuccess(filePath, updatedContents, sha));    
-        });
-    }
+            .post('/fileContents', { filePath, contents, sha })
+            .then((response) => {
+                dispatch(updateFileContentSuccess(filePath, updatedContents, sha));
+            });
+    };
 
-}
+};
 
 export const fetchContents = (branch) => {
     return (dispatch) => {
