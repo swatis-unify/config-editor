@@ -11,5 +11,9 @@ export default {
     loggedInUser: {},
     feeds: [],
     configs: [],
-    callsInProgress: 0
+    callsInProgress: 0,
+    currentBranch: '',
+    currentConfig: {},
+    authFailureCode: null,
+    apiFailureCode: null
 };

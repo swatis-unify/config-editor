@@ -17,10 +17,10 @@ interface IHomePageProps {
     layoutActions: any;
     loggedInUser: any;
     feeds: any[];
+    currentBranch: string;
 }
 
 interface IHomePageState {
-    branch: string;
     filter: any;
 }
 
@@ -29,11 +29,6 @@ interface IHeader {
     sortable?: boolean;
     attribute?: string;
 }
-
-const SortDirection = {
-    asc: 1,
-    desc: 0
-};
 
 class HomePage extends React.Component<IHomePageProps, IHomePageState> {
     private tableHeaders: IHeader[];
@@ -57,7 +52,6 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         ];
 
         this.state = {
-            branch: '',
             filter: {
                 data_partner_name: 'asc',
                 feed_name: 'asc'
@@ -75,8 +69,7 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         return _.orderBy(feeds, _.keys(this.state.filter), _.values(this.state.filter));
     }
     private selectBranch(event, index, branch) {
-        this.setState({ branch });
-
+        this.props.actions.setBranch(branch);
         this.props.actions.fetchContents(branch);
     }
     public onEdit(name) {
@@ -109,7 +102,7 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <SelectField
                         floatingLabelText="Branch"
-                        value={this.state.branch}
+                        value={this.props.currentBranch}
                         onChange={this.selectBranch}
                     >
                         {...options}
@@ -121,7 +114,7 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                         icon={<GithubIcon height={20} width={20} />}
                     />
                 </div>
-                <div>
+                <div style={{ margin: '10px 0' }}>
                     {(this.props.feeds.length > 0) && <FeedTable headers={this.tableHeaders} filter={this.state.filter} feeds={this.getFilteredFeeds()} onSort={this.updateFilter} onEdit={this.onEdit} onCreateNew={this.onCreateNew} />}
                 </div>
             </div>
@@ -132,7 +125,8 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 const mapStateToProps = (state, ownProps) => {
     return {
         loggedInUser: state.loggedInUser,
-        feeds: state.feeds
+        feeds: state.feeds,
+        currentBranch: state.currentBranch
     };
 };
 const mapDispatchToProps = (dispatch) => {

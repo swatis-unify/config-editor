@@ -138,24 +138,32 @@ const config: webpack.Configuration = {
 
             app.get('/contents', (req, res) => {
                 const branch = req.query.branch;
-                Github.instance.getContents(apiConfig.repoOwner, apiConfig.repoName, apiConfig.sourcePath, branch)
-                    .then((contents) => {
-                        res.json(contents);
-                    })
-                    .catch((error) => {
-                        res.status(500).send('failed to fetch contents');
-                    });
+                if (!(req.session.user && req.session.user.loggedIn)) {
+                    res.status(401).send('Login required');
+                } else {
+                    Github.instance.getContents(apiConfig.repoOwner, apiConfig.repoName, apiConfig.sourcePath, branch)
+                        .then((contents) => {
+                            res.json(contents);
+                        })
+                        .catch((error) => {
+                            res.status(500).send('failed to fetch contents');
+                        });
+                }
             });
 
             app.get('/config', (req, res) => {
                 const url = req.query.url;
-                Github.instance.getConfig(url)
-                    .then((result) => {
-                        res.json(result);
-                    })
-                    .catch((error) => {
-                        res.status(500).send('failed to fetch config');
-                    });
+                if (!(req.session.user && req.session.user.loggedIn)) {
+                    res.status(401).send('Login required');
+                } else {
+                    Github.instance.getConfig(url)
+                        .then((result) => {
+                            res.json(result);
+                        })
+                        .catch((error) => {
+                            res.status(500).send('failed to fetch config');
+                        });
+                }
             });
         }
     },

@@ -5,6 +5,10 @@ import currentRoute from './routeReducer';
 import loggedInUser from './userReducer';
 import feeds from './feedsReducer';
 import callsInProgress from './callsReducer';
+import currentBranch from './currentBranchReducer';
+import authFailureStatus from './authFailureStatusReducer';
+import apiFailureStatus from './apiFailureStatusReducer';
+import currentConfig from './configReducer';
 
 const rootReducer = combineReducers({
     businessRules,
@@ -12,7 +16,11 @@ const rootReducer = combineReducers({
     currentRoute,
     loggedInUser,
     feeds,
-    callsInProgress
+    callsInProgress,
+    currentBranch,
+    currentConfig,
+    authFailureStatus,
+    apiFailureStatus
 });
 
 export default rootReducer;

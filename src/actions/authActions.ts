@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import * as layoutActions from './layoutActions';
 import * as loaderActions from './loaderActions';
+import * as failureActions from './errorStatusActions';
 
 const loginSuccess = (user) => {
     return { type: types.LOGIN_SUCCESS, user };
@@ -14,20 +15,15 @@ const loginError = () => {
 };
 
 export const fetchAccessToken = (code: string, state: string) => {
-    const params = {
-        code: code
-    };
-    const query = Object.keys(params)
-        .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
-        .join('&');
+    const params = { code, state };
     return (dispatch) => {
         dispatch(loaderActions.startCall());
-        return axios.get(`/accesstoken?${query}`)
+        return axios.get(`/accesstoken`, { params })
             .then((response) => {
                 dispatch(loginSuccess(response.data));
                 dispatch(loaderActions.callSuccess());
             }).catch((error) => {
-                dispatch(loginError());
+                dispatch(failureActions.authFailed(error.request.status));
                 dispatch(loaderActions.callFailure());
             });
     };

@@ -28,7 +28,7 @@ class LoginSuccessPage extends React.Component<ILoginSuccessProps, null> {
     }
 
     public render(): JSX.Element {
-        return (<div />);
+        return (<div className="login-wrapper" />);
     }
 
 }

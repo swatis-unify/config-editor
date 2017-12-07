@@ -5,7 +5,7 @@ import { Card, CardHeader, CardText, RaisedButton } from 'material-ui';
 import ActionHome from 'material-ui/svg-icons/action/home';
 
 import GithubIcon from '../common/githubIcon';
-import './loginStyles.less';
+import './loginStyles.css';
 
 class LogInPage extends React.Component<null, null> {
     constructor(props, context) {
@@ -32,7 +32,7 @@ class LogInPage extends React.Component<null, null> {
     public render(): JSX.Element {
         return (
             <div className="login-wrapper">
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', position: 'relative', top: '40%' }}>
                     <Card className="col-md-5">
                         <CardText style={{ textAlign: 'center' }}>
                             <h3>Login with GitHub to get started</h3>

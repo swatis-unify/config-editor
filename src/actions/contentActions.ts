@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import * as layoutActions from './layoutActions';
 import * as loaderActions from './loaderActions';
+import * as failureActions from './errorStatusActions';
 
 interface IFile {
     feed_name?: string;
@@ -46,19 +47,8 @@ const createFeeds = (contents) => {
     return { feeds };
 };
 
-const createFeedsAndConfigs = (contents) => {
-    const configs = _.map(contents, (content: any) => {
-        content.id = _.uniqueId();
-        return content;
-    });
-
-    const feeds = _.map(configs, (config: { id: number, filters: { filter_name: string, params: any }[] }) => {
-        const filter: any = _.find(config.filters, { filter_name: 'get_configurations' }) || {};
-
-        return { configuration_id: config.id, ...filter.params.common };
-    });
-
-    return { feeds, configs };
+export const setBranch = (branch: string) => {
+    return { type: types.UPDATE_CURRENT_BRANCH, branch };
 };
 
 const updateBranches = (branches) => {
@@ -70,17 +60,11 @@ export const fetchBranches = () => {
         dispatch(loaderActions.startCall());
         return axios.get('/branches')
             .then((response) => {
-                console.log('success: ', response);
                 dispatch(updateBranches({ branches: response.data }));
                 dispatch(loaderActions.callSuccess());
             }).catch((error) => {
-                // user not logged in
-                if (error.request.status === 401) {
-                    dispatch(layoutActions.setRoute('/login'));
-                    dispatch(loaderActions.callFailure());
-                } else {
-                    dispatch(loaderActions.callFailure());
-                }
+                dispatch(failureActions.apiFailed(error.request.status));
+                dispatch(loaderActions.callFailure());
             });
     };
 };
@@ -96,17 +80,10 @@ export const fetchContents = (branch) => {
             .then((response) => {
                 const info = createFeeds(response.data);
                 dispatch(fetchFeedsSuccess(info.feeds));
-                // dispatch(fetchConfigsSuccess(info.configs));
                 dispatch(loaderActions.callSuccess());
             }).catch((error) => {
-                dispatch(fetchFilesFailure());
+                dispatch(failureActions.apiFailed(error.request.status));
                 dispatch(loaderActions.callFailure());
-                // user not logged in
-                // if (error.request.status === 401) {
-                //     dispatch(layoutActions.setRoute('/login'));
-                // } else {
-                //     dispatch((fetchFilesFailure()));
-                // }
             });
     };
 };
@@ -121,13 +98,8 @@ export const fetchConfig = (feed: any) => {
                 dispatch(updateConfig({ fileName: feed.name, config: response.data }));
                 dispatch(loaderActions.callSuccess());
             }).catch((error) => {
-                // user not logged in
-                if (error.request.status === 401) {
-                    dispatch(layoutActions.setRoute('/login'));
-                    dispatch(loaderActions.callFailure());
-                } else {
-                    dispatch(loaderActions.callFailure());
-                }
+                dispatch(failureActions.apiFailed(error.request.status));
+                dispatch(loaderActions.callFailure());
             });
     };
 };

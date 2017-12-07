@@ -9,6 +9,7 @@ import LeftDrawer from './common/leftDrawer';
 import TopAppBar from './common/topAppBar';
 import RouteChanger from './common/routeChanger';
 import Loader from './common/loader';
+import ErrorSnackbar from './common/errorSnackbar';
 import theme from '../theme';
 
 interface IAppProps {
@@ -46,6 +47,7 @@ class App extends React.Component<IAppProps, null> {
                         <h2>{this.props.currentRoute.title}</h2>
                         {this.props.children}
                     </div>
+                    <ErrorSnackbar />
                 </div>
             </MuiThemeProvider>
         );
