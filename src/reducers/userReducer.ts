@@ -7,6 +7,8 @@ const userReducer = (state = initialState.loggedInUser, action) => {
     switch (action.type) {
         case types.LOGIN_SUCCESS:
             return _.assign(action.user, state);
+        case types.UPDATE_USER:
+            return _.assign(action.user, state);
         case types.LOGIN_FAILURE:
             return {};
         case types.UPDATE_BRANCHES:

@@ -121,6 +121,14 @@ const config: webpack.Configuration = {
                     });
             });
 
+            app.get('/user', (req, res) => {
+                if (req.session.user && req.session.user.loggedIn) {
+                    res.json({ loggedIn: true });
+                } else {
+                    res.json({ loggedIn: false });
+                }
+            });
+
             app.get('/branches', (req, res) => {
                 if (!(req.session.user && req.session.user.loggedIn)) {
                     res.status(401).send('Login required');
@@ -152,11 +160,12 @@ const config: webpack.Configuration = {
             });
 
             app.get('/config', (req, res) => {
-                const url = req.query.url;
+                const filePath = req.query.filePath;
+                const branch = req.query.branch;
                 if (!(req.session.user && req.session.user.loggedIn)) {
                     res.status(401).send('Login required');
                 } else {
-                    Github.instance.getConfig(url)
+                    Github.instance.getContents(apiConfig.repoOwner, apiConfig.repoName, filePath, branch)
                         .then((result) => {
                             res.json(result);
                         })

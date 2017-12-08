@@ -88,14 +88,15 @@ export const fetchContents = (branch) => {
     };
 };
 
-export const fetchConfig = (feed: any) => {
-    const feedUrl = feed.download_url;
+export const fetchConfig = (feed: any, branch: string) => {
+    const filePath = feed.path;
     return (dispatch) => {
         dispatch(loaderActions.startCall());
-        return axios.get('/config', { params: { url: feedUrl } })
+        return axios.get('/config', { params: { filePath, branch } })
             .then((response) => {
-                console.log('success: ', response);
-                dispatch(updateConfig({ fileName: feed.name, config: response.data }));
+                const { path, sha } = response.data;
+                const content = window.atob(response.data.content);
+                dispatch(updateConfig({ config: JSON.parse(content), path, sha }));
                 dispatch(loaderActions.callSuccess());
             }).catch((error) => {
                 dispatch(failureActions.apiFailed(error.request.status));

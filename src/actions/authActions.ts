@@ -29,4 +29,28 @@ export const fetchAccessToken = (code: string, state: string) => {
     };
 };
 
+const updateUser = (user) => {
+    return { type: types.UPDATE_USER, user };
+};
+
+export const fetchUser = () => {
+    return (dispatch) => {
+        dispatch(loaderActions.startCall());
+        return axios.get(`/user`)
+            .then((response) => {
+                dispatch(updateUser(response.data));
+                if (response.data.loggedIn) {
+                    dispatch(layoutActions.setRoute('/home'));
+                } else {
+                    dispatch(layoutActions.setRoute('/login'));
+                }
+                dispatch(loaderActions.callSuccess());
+            }).catch((error) => {
+                dispatch(failureActions.authFailed(error.request.status));
+                dispatch(loaderActions.callFailure());
+            });
+    };
+};
+
+
 
