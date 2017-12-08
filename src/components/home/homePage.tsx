@@ -18,6 +18,7 @@ interface IHomePageProps {
     loggedInUser: any;
     feeds: any[];
     currentBranch: string;
+    currentConfig: any;
 }
 
 interface IHomePageState {
@@ -75,9 +76,13 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
     public onEdit(name) {
         const feed = _.find(this.props.feeds, { name });
         if (feed) {
-            this.props.actions.fetchConfig(feed).then(() => {
+            if (this.props.currentConfig.path === feed.path) {
                 this.props.layoutActions.setRoute('/partnerconfig');
-            });
+            } else {
+                this.props.actions.fetchConfig(feed, this.props.currentBranch).then(() => {
+                    this.props.layoutActions.setRoute('/partnerconfig');
+                });
+            }
         }
     }
     public onCreateNew(feedUrl) {
@@ -126,7 +131,8 @@ const mapStateToProps = (state, ownProps) => {
     return {
         loggedInUser: state.loggedInUser,
         feeds: state.feeds,
-        currentBranch: state.currentBranch
+        currentBranch: state.currentBranch,
+        currentConfig: state.currentConfig
     };
 };
 const mapDispatchToProps = (dispatch) => {

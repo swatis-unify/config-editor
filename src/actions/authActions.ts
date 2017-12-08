@@ -33,6 +33,20 @@ const updateUser = (user) => {
     return { type: types.UPDATE_USER, user };
 };
 
+export const logout = () => {
+    return (dispatch) => {
+        dispatch(loaderActions.startCall());
+        return axios.post(`/logout`)
+            .then((response) => {
+                dispatch(updateUser(response.data));
+                dispatch(loaderActions.callSuccess());
+            }).catch((error) => {
+                dispatch(failureActions.authFailed(error.request.status));
+                dispatch(loaderActions.callFailure());
+            });
+    };
+};
+
 export const fetchUser = () => {
     return (dispatch) => {
         dispatch(loaderActions.startCall());

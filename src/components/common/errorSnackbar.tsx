@@ -22,6 +22,7 @@ class ErrorSnackbar extends React.Component<IErrorSnackbarProps, null> {
         this.getMessage = this.getMessage.bind(this);
         this.handleSnackbarClose = this.handleSnackbarClose.bind(this);
         this.isSnackbarOpen = this.isSnackbarOpen.bind(this);
+        this.getHideDuration = this.getHideDuration.bind(this);
     }
     private getMessage(): string {
         if (this.props.authFailureStatus) {
@@ -43,6 +44,13 @@ class ErrorSnackbar extends React.Component<IErrorSnackbarProps, null> {
             this.props.actions.resetApiFailureStatus();
         }
     }
+    private getHideDuration(): number {
+        if (this.props.authFailureStatus || (this.props.apiFailureStatus === 401)) {
+            return 1;
+        } else if (this.props.apiFailureStatus) {
+            return 4000;
+        }
+    }
     private isSnackbarOpen(): boolean {
         return (this.props.authFailureStatus || this.props.apiFailureStatus) ? true : false;
     }
@@ -50,7 +58,7 @@ class ErrorSnackbar extends React.Component<IErrorSnackbarProps, null> {
         return <Snackbar
             open={this.isSnackbarOpen()}
             message={this.getMessage()}
-            autoHideDuration={4000}
+            autoHideDuration={this.getHideDuration()}
             onRequestClose={this.handleSnackbarClose}
         />;
     }

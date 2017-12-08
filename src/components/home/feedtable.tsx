@@ -91,7 +91,7 @@ export default class FeedTable extends React.Component<IFeedTableProps, null> {
                 <TableHeader displaySelectAll={false} adjustForCheckbox={false} style={tableStyle.header}>
                     <TableRow selectable={false}>
                         {_.map(this.props.headers, header => {
-                            return <TableHeaderColumn key={header.attribute} style={tableStyle.headerText}>{this.getHeaderRow(header)}</TableHeaderColumn>;
+                            return <TableHeaderColumn key={header.title} style={tableStyle.headerText}>{this.getHeaderRow(header)}</TableHeaderColumn>;
                         })}
                     </TableRow>
                 </TableHeader>

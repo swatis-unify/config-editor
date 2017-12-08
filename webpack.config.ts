@@ -170,9 +170,16 @@ const config: webpack.Configuration = {
                             res.json(result);
                         })
                         .catch((error) => {
+                            console.log('Error: ', error);
                             res.status(500).send('failed to fetch config');
                         });
                 }
+            });
+
+            app.post('/logout', (req, res) => {
+                req.session.destroy(() => {
+                    res.json({ success: true });
+                });
             });
         }
     },

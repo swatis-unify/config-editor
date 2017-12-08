@@ -6,6 +6,8 @@ const loaderStyle: React.CSSProperties = {
     width: '100vw',
     height: '100vh',
     zIndex: 1200
+    // opacity: 0.7,
+    // backgroundColor: 'gray'
 };
 
 const Loader = () => {
