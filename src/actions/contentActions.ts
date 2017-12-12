@@ -69,8 +69,8 @@ export const fetchBranches = () => {
     };
 };
 
-const updateConfig = (config) => {
-    return { type: types.UPDATE_CONFIG, config };
+const loadConfig = (config) => {
+    return { type: types.LOAD_CONFIG, config };
 };
 
 export const fetchContents = (branch) => {
@@ -96,10 +96,35 @@ export const fetchConfig = (feed: any, branch: string) => {
             .then((response) => {
                 const { path, sha } = response.data;
                 const content = window.atob(response.data.content);
-                dispatch(updateConfig({ config: JSON.parse(content), path, sha }));
+                dispatch(loadConfig({ config: JSON.parse(content), path, sha }));
                 dispatch(loaderActions.callSuccess());
             }).catch((error) => {
                 dispatch(failureActions.apiFailed(error.request.status));
+                dispatch(loaderActions.callFailure());
+            });
+    };
+};
+
+export const updateFilter = (filter: { filter_name: string, params: any }) => {
+    return { type: types.UPDATE_FILTER, filter };
+};
+
+export const resetConfig = () => {
+    return { type: types.RESET_CONFIG };
+};
+
+export const pushConfig = (branch: string, config: { config: any; sha: string, path: string }) => {
+    const contents = window.btoa(JSON.stringify(config.config, null, 4));
+    const { path, sha } = config;
+
+    return (dispatch) => {
+        dispatch(loaderActions.startCall());
+        return axios
+            .post('/pushChanges', { path, contents, sha, branch })
+            .then((response) => {
+                dispatch(loaderActions.callSuccess());
+            })
+            .catch(error => {
                 dispatch(loaderActions.callFailure());
             });
     };

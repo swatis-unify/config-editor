@@ -32,10 +32,6 @@ const multiFieldContainerStyle: React.CSSProperties = {
     justifyContent: 'space-between'
 };
 
-const errorMessageStyle: React.CSSProperties = {
-    color: 'red'
-};
-
 const submitButtonsStyle: React.CSSProperties = {
     display: 'flex',
     justifyContent: 'flex-end'
@@ -117,14 +113,13 @@ export default class CommonFilter extends React.Component<IFilterProps, ICommonF
             }
         };
 
-        const params = _.assign(this.props.params, { common }, { ignore_lines });
+        const params = _.assign({}, this.props.params, { common }, { ignore_lines });
         this.props.onSave(params);
     }
     private cancelUpdates() {
         this.setState(this.getDefaultState());
     }
     public render(): JSX.Element {
-        console.log(this.props.params);
         return (<div>
             <form>
                 <RadioButtonGroup name="fileType" defaultSelected={this.state.fileType}>

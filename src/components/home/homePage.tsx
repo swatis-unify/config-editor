@@ -8,6 +8,7 @@ import { SelectField, MenuItem, RaisedButton, FontIcon } from 'material-ui';
 
 import * as layoutActions from '../../actions/layoutActions';
 import * as contentActions from '../../actions/contentActions';
+import * as loaderActions from '../../actions/loaderActions';
 
 import FeedTable from './feedtable';
 import GithubIcon from '../common/githubIcon';
@@ -15,6 +16,7 @@ import GithubIcon from '../common/githubIcon';
 interface IHomePageProps {
     actions: any;
     layoutActions: any;
+    loaderActions: any;
     loggedInUser: any;
     feeds: any[];
     currentBranch: string;
@@ -64,6 +66,7 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         this.updateFilter = this.updateFilter.bind(this);
         this.onEdit = this.onEdit.bind(this);
         this.onCreateNew = this.onCreateNew.bind(this);
+        this.syncWithGithub = this.syncWithGithub.bind(this);
     }
     private getFilteredFeeds() {
         const { feeds } = this.props;
@@ -95,7 +98,17 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         this.setState({ filter });
     }
     public componentWillMount() {
-        this.props.actions.fetchBranches();
+        if (!this.props.loggedInUser.branches) {
+            this.props.actions.fetchBranches();
+        }
+    }
+    private syncWithGithub() {
+        this.props.actions.fetchBranches().then(() => {
+            if (this.props.currentBranch) {
+                this.props.actions.fetchContents(this.props.currentBranch);
+                this.props.actions.resetConfig();
+            }
+        });
     }
     public render(): JSX.Element {
         const options = _.map(this.props.loggedInUser.branches, (branch: any) => {
@@ -116,6 +129,7 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                         primary={true}
                         label="Sync with Github"
                         style={{ margin: '0 5px', height: 36, position: 'relative', top: 28 }}
+                        onClick={this.syncWithGithub}
                         icon={<GithubIcon height={20} width={20} />}
                     />
                 </div>
@@ -138,7 +152,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
     return ({
         actions: bindActionCreators(contentActions, dispatch),
-        layoutActions: bindActionCreators(layoutActions, dispatch)
+        layoutActions: bindActionCreators(layoutActions, dispatch),
+        loaderActions: bindActionCreators(loaderActions, dispatch)
     });
 };
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HomePage));

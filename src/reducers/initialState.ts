@@ -13,7 +13,7 @@ export default {
     configs: [],
     callsInProgress: 0,
     currentBranch: '',
-    currentConfig: {},
+    currentConfig: { config: { filters: [] }, sha: '', path: '' },
     authFailureCode: null,
     apiFailureCode: null
 };

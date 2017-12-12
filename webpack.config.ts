@@ -5,8 +5,8 @@ import Github from './src/helpers/github';
 import apiConfig from './api_config';
 
 // for custom apis
-import axios from 'axios';
 import * as session from 'express-session';
+import * as bodyParser from 'body-parser';
 
 // Plugins
 // import * as HtmlWebpackPlugin from 'html-webpack-plugin';
@@ -106,6 +106,7 @@ const config: webpack.Configuration = {
         disableHostCheck: true,
         before(app) {
             app.use(session({ secret: '123abc' }));
+            const jsonParser = bodyParser.json();
             app.get('/accesstoken', (req, res) => {
                 const code = req.query.code;
                 req.session.user = {};
@@ -180,6 +181,27 @@ const config: webpack.Configuration = {
                 req.session.destroy(() => {
                     res.json({ success: true });
                 });
+            });
+
+            app.post('/pushChanges', jsonParser, (req, res) => {
+                console.log("POST FILE CONTENTS");
+                console.log(req.body);
+
+                const { contents, sha, branch } = req.body;
+                const filePath = req.body.path;
+
+                Github.instance.pushChanges(apiConfig.repoOwner,
+                    apiConfig.repoName,
+                    filePath,
+                    branch,
+                    contents,
+                    sha)
+                    .then(() => {
+                        res.json({ "status": "OK" });
+                    })
+                    .catch((error) => {
+                        res.status(500).send(JSON.stringify(error));
+                    });
             });
         }
     },

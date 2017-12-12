@@ -37,7 +37,7 @@ class TopAppBar extends React.Component<IAppBarProps, null> {
         const logoutButton = <FlatButton
             label="Logout"
             labelPosition="before"
-            icon={<Logout />}
+            icon={<i className="fas fa-sign-out-alt" />}
             onClick={this.logout}
         />;
         return (

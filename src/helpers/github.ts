@@ -60,21 +60,23 @@ export default class Github {
         return config as any[];
     }
     public async getContents(repoOwner: string, repoName: string, path: string, branchName: string): Promise<IFile[]> {
-        const data = [];
-        const calls: Promise<any>[] = [];
         const params = { access_token: this._accessToken, ref: branchName };
         const url = `${this.baseAPIUrl}/repos/${repoOwner}/${repoName}/contents/${path}`;
         const files = await requestExecutor('get', url, params, null);
         return files as IFile[];
-        // return requestExecutor('get', url, params, null).then(async (files: IFile[]) => {
-        //     _.forEach(files, (file: IFile) => {
-        //         if (file.download_url) {
-        //             calls.push(requestExecutor('get', files[0].download_url, null, null).then((result) => data.push(result)));
-        //         }
-        //     });
-        //     return Promise.all(calls).then(() => {
-        //         return data;
-        //     });
-        // });
+    }
+    public async pushChanges(repoOwner: string, repoName: string, path: string, branchName: string, contents: string, sha: string): Promise<IFile[]> {
+        const params = { access_token: this._accessToken };
+        const url = `${this.baseAPIUrl}/repos/${repoOwner}/${repoName}/contents/${path}`;
+
+        const data = {
+            "message": `Updated ${path}`,
+            "content": contents,
+            "sha": sha,
+            "branch": branchName
+        };
+
+        const result: any = await requestExecutor('put', url, params, data);
+        return result;
     }
 }
