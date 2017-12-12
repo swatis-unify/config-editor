@@ -12,12 +12,15 @@ import {
     FilterRow,
     CommonFilter,
     SplitByFilter,
+    SplitByFilterRow,
     PivotConfiguration,
     BROverwrite,
     SQLExpression,
     DefaultValue,
     ConcatenatedField
 } from './filters';
+
+import AddFilterRow from './addFilterRow';
 
 interface IFilter {
     filter_name: string;
@@ -49,7 +52,8 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
         }, {
             filterName: 'split_by_position',
             title: 'Split by Position',
-            component: SplitByFilter
+            component: SplitByFilter,
+            rowComponent: SplitByFilterRow
         }, {
             filterName: 'get_pivot_configurations',
             title: 'Pivot Configuration',
@@ -75,6 +79,7 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
         this.state = { selectedFilter: '' };
 
         this.onSave = this.onSave.bind(this);
+        this.onSaveNew = this.onSaveNew.bind(this);
         this.onAddFilter = this.onAddFilter.bind(this);
         this.pushConfig = this.pushConfig.bind(this);
         this.getNewFilterForm = this.getNewFilterForm.bind(this);
@@ -89,10 +94,30 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
     private onAddFilter(event, value) {
         this.setState({ selectedFilter: value });
     }
+    private constructParams(filterName, field) {
+        switch (filterName) {
+            case 'split_by_position':
+                return { filter_name: filterName, params: { fields: [field] } };
+            default:
+                return { filter_name: filterName, params: {} };
+        }
+    }
+    public onSaveNew(filterName, field) {
+        const config = this.props.config.config || { filters: [] };
+        const filter: IFilter = _.find(config.filters, { filter_name: filterName }) ? _.assign({}, _.find(config.filters, { filter_name: filterName })) : { filter_name: '', params: {} };
+        if (!filter.filter_name) {
+            this.props.actions.addFilter(this.constructParams(filterName, field));
+        } else if (filter.filter_name === 'split_by_position') {
+            filter.params.fields.push(field);
+            this.props.actions.updateFilter(filter);
+        }
+
+        this.setState({ selectedFilter: '' });
+    }
     private getNewFilterForm(): JSX.Element {
         const filterComponent: any = _.find(this.filters, { filterName: this.state.selectedFilter });
-        return (<div className="col-md-6">
-            {filterComponent && <FilterRow key={this.state.selectedFilter} params={{}} onSave={this.onSave} {...filterComponent} />}
+        return (<div style={{ width: '50%' }}>
+            {filterComponent && <AddFilterRow key={this.state.selectedFilter} onSave={this.onSaveNew} {...filterComponent} />}
         </div>);
     }
     public render(): JSX.Element {

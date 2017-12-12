@@ -11,11 +11,11 @@ interface IFilterProps {
     onSave: (filerName: string, params: any) => void;
 }
 
-interface IFIlterState {
+interface IFilterState {
     expanded: boolean;
 }
 
-export default class FilterRow extends React.Component<IFilterProps, IFIlterState> {
+export default class FilterRow extends React.Component<IFilterProps, IFilterState> {
     constructor(props, context) {
         super(props, context);
 

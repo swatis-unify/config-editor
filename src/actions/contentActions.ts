@@ -95,7 +95,11 @@ export const fetchConfig = (feed: any, branch: string) => {
         return axios.get('/config', { params: { filePath, branch } })
             .then((response) => {
                 const { path, sha } = response.data;
-                const content = window.atob(response.data.content);
+                let content = window.atob(response.data.content);
+                // remove trailing commas, JSON.parse fails to parse
+                // reference - https://stackoverflow.com/questions/34344328/json-remove-trailiing-comma-from-last-object
+                const regex = /\,(?=\s*?[\}\]])/g;
+                content = content.replace(regex, ''); // remove all trailing commas
                 dispatch(loadConfig({ config: JSON.parse(content), path, sha }));
                 dispatch(loaderActions.callSuccess());
             }).catch((error) => {
@@ -107,6 +111,10 @@ export const fetchConfig = (feed: any, branch: string) => {
 
 export const updateFilter = (filter: { filter_name: string, params: any }) => {
     return { type: types.UPDATE_FILTER, filter };
+};
+
+export const addFilter = (filter: { filter_name: string, params: any }) => {
+    return { type: types.ADD_FILTER, filter };
 };
 
 export const resetConfig = () => {

@@ -53,7 +53,7 @@ export default class CommonFilter extends React.Component<IFilterProps, ICommonF
     }
     private getDefaultState() {
         const { data_partner_name, feed_name } = this.props.params.common;
-        const { header_row_count, trailer_row_count } = this.props.params.ignore_lines.params;
+        const { header_row_count, trailer_row_count } = this.props.params.ignore_lines ? this.props.params.ignore_lines.params : { header_row_count: 0, trailer_row_count: 0 };
         return {
             data_partner_name,
             feed_name,
