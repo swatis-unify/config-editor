@@ -37,10 +37,9 @@ export default class SplitByFilterRow extends React.Component<ISplitByFilterRowP
         this.updateFilter = this.updateFilter.bind(this);
         this.cancelUpdates = this.cancelUpdates.bind(this);
 
-        const defaultState = this.getDefaultState();
-
         this.state = {
-            expanded: false, name: this.props.name,
+            expanded: false,
+            name: this.props.name,
             start: this.props.start,
             end: this.props.end,
             errors: {}

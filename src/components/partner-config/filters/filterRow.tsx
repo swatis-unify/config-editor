@@ -9,6 +9,7 @@ interface IFilterProps {
     component: any;
     params: any;
     onSave: (filerName: string, params: any) => void;
+    fields: string[];
 }
 
 interface IFilterState {
@@ -39,7 +40,7 @@ export default class FilterRow extends React.Component<IFilterProps, IFilterStat
                 subtitle={this.props.subtitle}
             />
             <CardText expandable={true}>
-                {<this.props.component onSave={this.onSave} params={this.props.params} />}
+                {<this.props.component onSave={this.onSave} params={this.props.params} fields={this.props.fields} />}
             </CardText>
         </Card>);
     }

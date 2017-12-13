@@ -184,9 +184,6 @@ const config: webpack.Configuration = {
             });
 
             app.post('/pushChanges', jsonParser, (req, res) => {
-                console.log("POST FILE CONTENTS");
-                console.log(req.body);
-
                 const { contents, sha, branch } = req.body;
                 const filePath = req.body.path;
 
@@ -195,13 +192,10 @@ const config: webpack.Configuration = {
                     filePath,
                     branch,
                     contents,
-                    sha)
-                    .then(() => {
-                        res.json({ "status": "OK" });
-                    })
-                    .catch((error) => {
-                        res.status(500).send(JSON.stringify(error));
-                    });
+                    sha
+                )
+                    .then(() => { res.json({ "status": "OK" }); })
+                    .catch((error) => { res.status(500).send(JSON.stringify(error)); });
             });
         }
     },

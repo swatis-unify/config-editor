@@ -10,6 +10,7 @@ interface IFilterProps {
     rowComponent?: any;
     params?: any;
     onSave: (filerName: string, params: any) => void;
+    fields: string[];
 }
 
 interface IFilterState {
@@ -45,7 +46,7 @@ export default class AddFilterRow extends React.Component<IFilterProps, IFilterS
     }
     public render(): JSX.Element {
         return (<div>
-            {<this.props.rowComponent title={this.props.title} expanded={true} onSave={this.onSave} params={this.getOrBuildParams()} />}
+            {<this.props.rowComponent options={this.props.fields} title={this.props.title} expanded={true} onSave={this.onSave} params={this.getOrBuildParams()} />}
         </div>);
     }
 }

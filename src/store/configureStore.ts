@@ -7,7 +7,7 @@ export default function configureStore(initialState = {}) {
     return createStore(
         rootReducer,
         initialState,
-        applyMiddleware(thunk, reduxImmutableStateInvariant()) // To-Do - Swati - Turn it on
-        // applyMiddleware(thunk)
+        // applyMiddleware(thunk, reduxImmutableStateInvariant()) // To-Do - Swati - Turn it on
+        applyMiddleware(thunk)
     );
 }

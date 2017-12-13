@@ -7,7 +7,7 @@ import { withRouter } from 'react-router';
 import { RaisedButton, IconMenu, MenuItem } from 'material-ui';
 
 import * as contentActions from '../../actions/contentActions';
-
+import './filters/filterForm.css';
 import {
     FilterRow,
     CommonFilter,
@@ -17,9 +17,9 @@ import {
     BROverwrite,
     SQLExpression,
     DefaultValue,
-    ConcatenatedField
+    ConcatenatedField,
+    ConcatenatedFieldRow
 } from './filters';
-
 import AddFilterRow from './addFilterRow';
 
 interface IFilter {
@@ -73,7 +73,8 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
         }, {
             filterName: 'multiparam',
             title: 'Concatenated Field',
-            component: ConcatenatedField
+            component: ConcatenatedField,
+            rowComponent: ConcatenatedFieldRow
         }];
 
         this.state = { selectedFilter: '' };
@@ -98,6 +99,8 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
         switch (filterName) {
             case 'split_by_position':
                 return { filter_name: filterName, params: { fields: [field] } };
+            case 'multiparam':
+                return { filter_name: filterName, params: [{ method: "get_concatenated_field", params: { target_field: '' } }] };
             default:
                 return { filter_name: filterName, params: {} };
         }
@@ -110,6 +113,9 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
         } else if (filter.filter_name === 'split_by_position') {
             filter.params.fields.push(field);
             this.props.actions.updateFilter(filter);
+        } else if (filter.filter_name === 'multiparam') {
+            filter.params.push({ method: "get_concatenated_field", params: field });
+            this.props.actions.updateFilter(filter);
         }
 
         this.setState({ selectedFilter: '' });
@@ -117,13 +123,22 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
     private getNewFilterForm(): JSX.Element {
         const filterComponent: any = _.find(this.filters, { filterName: this.state.selectedFilter });
         return (<div style={{ width: '50%' }}>
-            {filterComponent && <AddFilterRow key={this.state.selectedFilter} onSave={this.onSaveNew} {...filterComponent} />}
+            {filterComponent && <AddFilterRow key={this.state.selectedFilter} fields={this.getAutoCompleteOptions(this.state.selectedFilter)} onSave={this.onSaveNew} {...filterComponent} />}
         </div>);
+    }
+    private getAutoCompleteOptions(filterName) {
+        const config = this.props.config.config || { filters: [] };
+        if (filterName === 'split_by_position') {
+            return [];
+        }
+
+        const filter = _.find(config.filters, { filter_name: 'split_by_position' });
+        return (filter ? _.map(filter.params.fields, 'name') : []);
     }
     public render(): JSX.Element {
         const config = this.props.config.config || { filters: [] };
         return (
-            <div>
+            <div id="partner-config">
                 <div className="col-md-12">
                     <IconMenu
                         iconButtonElement={<RaisedButton label="Add" icon={<i className="fas fa-plus" />} />}
@@ -140,7 +155,7 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
                     {_.map(config.filters, (filter) => {
                         const filterComponent: any = _.find(this.filters, { filterName: filter.filter_name });
                         return (<div className="col-md-6">
-                            {filterComponent && <FilterRow key={filter.filter_name} params={filter.params} onSave={this.onSave} {...filterComponent} />}
+                            {filterComponent && <FilterRow key={filter.filter_name} fields={this.getAutoCompleteOptions(filter.filter_name)} params={filter.params} onSave={this.onSave} {...filterComponent} />}
                         </div>);
                     })}
                 </div>

@@ -1,0 +1,4 @@
+#partner-config form div.submit-buttons { 
+    display: 'flex';
+    justify-content: 'flex-end';
+}
