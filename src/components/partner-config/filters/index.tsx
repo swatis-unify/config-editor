@@ -6,6 +6,7 @@ export { default as BROverwrite } from './bROverwrite';
 export { default as SQLExpression } from './SQLExpression';
 export { default as SQLExpressionRow } from './SQLExpressionRow';
 export { default as DefaultValue } from './defaultValue';
+export { default as DefaultValueRow } from './defaultValueRow';
 export { default as ConcatenatedField } from './concatenatedField';
 export { default as ConcatenatedFieldRow } from './concatenatedFieldRow';
 export { default as FilterRow } from './filterRow';

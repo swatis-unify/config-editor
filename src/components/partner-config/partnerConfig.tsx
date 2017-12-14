@@ -18,6 +18,7 @@ import {
     SQLExpression,
     SQLExpressionRow,
     DefaultValue,
+    DefaultValueRow,
     ConcatenatedField,
     ConcatenatedFieldRow
 } from './filters';
@@ -71,7 +72,8 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
         }, {
             filterName: 'default_value',
             title: 'Default Value',
-            component: DefaultValue
+            component: DefaultValue,
+            rowComponent: DefaultValueRow
         }, {
             filterName: 'multiparam',
             title: 'Concatenated Field',
@@ -113,13 +115,19 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
         this.setState({ selectedFilter: value });
     }
     private constructParams(filterName, field) {
+        const param: any = {};
         switch (filterName) {
             case 'split_by_position':
                 return { filter_name: filterName, params: { fields: [field] } };
             case 'multiparam':
                 return { filter_name: filterName, params: [{ method: "get_concatenated_field", params: { target_field: '' } }] };
+            case 'sql_expression':
+                return { filter_name: filterName, params: [field] };
+            case 'default_value':
+                param[field.targetField] = field.value;
+                return { filter_name: filterName, params: param };
             default:
-                return { filter_name: filterName, params: {} };
+                return { filter_name: filterName, params: field };
         }
     }
     public onSaveNew(filterName, field) {
@@ -132,6 +140,9 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
             this.props.actions.updateFilter(filter);
         } else if (filter.filter_name === 'multiparam') {
             filter.params.push({ method: "get_concatenated_field", params: field });
+            this.props.actions.updateFilter(filter);
+        } else if (filter.filter_name === 'default_value') {
+            filter.params[field.targetField] = field.value;
             this.props.actions.updateFilter(filter);
         } else {
             filter.params.push(field);
