@@ -85,6 +85,21 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
         this.pushConfig = this.pushConfig.bind(this);
         this.getNewFilterForm = this.getNewFilterForm.bind(this);
     }
+    public componentWillMount() {
+        // Enable page reload. Fetch configs when page is reloaded.
+        if (!this.props.config.sha) {
+            const { search } = window.location;
+            const params = new URLSearchParams(search);
+
+            const path = params.get('path');
+            const branch = params.get('branch');
+
+            if (path && branch) {
+                this.props.actions.setBranch(branch);
+                this.props.actions.fetchConfig({ path }, branch);
+            }
+        }
+    }
     private pushConfig() {
         this.props.actions.pushConfig(this.props.branch, this.props.config);
     }

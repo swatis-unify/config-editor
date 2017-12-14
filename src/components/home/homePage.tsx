@@ -80,10 +80,10 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         const feed = _.find(this.props.feeds, { name });
         if (feed) {
             if (this.props.currentConfig.path === feed.path) {
-                this.props.layoutActions.setRoute('/partnerconfig');
+                this.props.layoutActions.setRoute('/partnerconfig', { path: feed.path, branch: this.props.currentBranch });
             } else {
                 this.props.actions.fetchConfig(feed, this.props.currentBranch).then(() => {
-                    this.props.layoutActions.setRoute('/partnerconfig');
+                    this.props.layoutActions.setRoute('/partnerconfig', { path: feed.path, branch: this.props.currentBranch });
                 });
             }
         }
@@ -100,6 +100,9 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
     public componentWillMount() {
         if (!this.props.loggedInUser.branches) {
             this.props.actions.fetchBranches();
+        }
+        if (this.props.currentBranch && !this.props.feeds.length) {
+            this.props.actions.fetchContents(this.props.currentBranch);
         }
     }
     private syncWithGithub() {

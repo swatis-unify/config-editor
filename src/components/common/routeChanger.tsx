@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as _ from 'lodash';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -14,9 +15,17 @@ class RouteChanger extends React.Component<IRouteChangerProps, null> {
     constructor(props, context) {
         super(props, context);
     }
+    private buildQuery(data) {
+        const query = [];
+        _.forEach(data, (value, key) => {
+            query.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+        });
+        return query.join("&");
+    }
     public componentWillReceiveProps(nextProps) {
         if (this.props.currentRoute !== nextProps.currentRoute) {
-            this.props.history.push(nextProps.currentRoute.path);
+            const path = nextProps.currentRoute.data ? `${nextProps.currentRoute.path}?${this.buildQuery(nextProps.currentRoute.data)}` : nextProps.currentRoute.path;
+            this.props.history.push(path);
         }
     }
 

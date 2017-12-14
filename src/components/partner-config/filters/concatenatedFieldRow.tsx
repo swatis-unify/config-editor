@@ -116,7 +116,6 @@ export default class ConcatenatedFieldRow extends React.Component<IConcatenatedF
         this.setState(this.getDefaultState());
     }
     private updateFilter() {
-        console.log('update filter in the store start process');
         let { errors } = this.state;
         // validate fields
         const mandatoryFields = [
@@ -149,7 +148,6 @@ export default class ConcatenatedFieldRow extends React.Component<IConcatenatedF
         return (key.toLowerCase().indexOf(searchText.toLowerCase()) !== -1);
     }
     public render(): JSX.Element {
-        console.log(this.props);
         return (<Card expanded={this.props.expanded || this.state.expanded} onExpandChange={this.toggleExpansion} style={{ margin: '10px 0' }}>
             <CardHeader
                 showExpandableButton={true}
