@@ -4,6 +4,7 @@ export { default as SplitByFilterRow } from './splitByFilterRow';
 export { default as PivotConfiguration } from './pivotConfiguration';
 export { default as BROverwrite } from './bROverwrite';
 export { default as SQLExpression } from './SQLExpression';
+export { default as SQLExpressionRow } from './SQLExpressionRow';
 export { default as DefaultValue } from './defaultValue';
 export { default as ConcatenatedField } from './concatenatedField';
 export { default as ConcatenatedFieldRow } from './concatenatedFieldRow';

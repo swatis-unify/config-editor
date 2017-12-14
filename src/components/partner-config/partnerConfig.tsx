@@ -16,6 +16,7 @@ import {
     PivotConfiguration,
     BROverwrite,
     SQLExpression,
+    SQLExpressionRow,
     DefaultValue,
     ConcatenatedField,
     ConcatenatedFieldRow
@@ -65,7 +66,8 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
         }, {
             filterName: 'sql_expression',
             title: 'SQL Expression',
-            component: SQLExpression
+            component: SQLExpression,
+            rowComponent: SQLExpressionRow
         }, {
             filterName: 'default_value',
             title: 'Default Value',
@@ -131,6 +133,9 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
         } else if (filter.filter_name === 'multiparam') {
             filter.params.push({ method: "get_concatenated_field", params: field });
             this.props.actions.updateFilter(filter);
+        } else {
+            filter.params.push(field);
+            this.props.actions.updateFilter(filter);
         }
 
         this.setState({ selectedFilter: '' });
@@ -161,7 +166,7 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
                         value={this.state.selectedFilter}
                     >
                         {_.map(_.filter(this.filters, (f) => !f.static), (filter: any) => {
-                            return <MenuItem value={filter.filterName} primaryText={filter.title} />;
+                            return <MenuItem key={filter.filterName} value={filter.filterName} primaryText={filter.title} />;
                         })}
                     </IconMenu>
                 </div>
@@ -169,7 +174,7 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
                 <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%', flexDirection: 'row', flexWrap: 'wrap' }}>
                     {_.map(config.filters, (filter) => {
                         const filterComponent: any = _.find(this.filters, { filterName: filter.filter_name });
-                        return (<div className="col-md-6">
+                        return (<div className="col-md-6" key={filter.filter_name}>
                             {filterComponent && <FilterRow key={filter.filter_name} fields={this.getAutoCompleteOptions(filter.filter_name)} params={filter.params} onSave={this.onSave} {...filterComponent} />}
                         </div>);
                     })}
