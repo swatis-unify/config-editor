@@ -3,6 +3,7 @@ export { default as SplitByFilter } from './splitByFilter';
 export { default as SplitByFilterRow } from './splitByFilterRow';
 export { default as PivotConfiguration } from './pivotConfiguration';
 export { default as BROverwrite } from './bROverwrite';
+export { default as BROverwriteRow } from './bROverwriteRow';
 export { default as SQLExpression } from './SQLExpression';
 export { default as SQLExpressionRow } from './SQLExpressionRow';
 export { default as DefaultValue } from './defaultValue';

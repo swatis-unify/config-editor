@@ -15,6 +15,7 @@ import {
     SplitByFilterRow,
     PivotConfiguration,
     BROverwrite,
+    BROverwriteRow,
     SQLExpression,
     SQLExpressionRow,
     DefaultValue,
@@ -63,7 +64,8 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
         }, {
             filterName: 'get_business_rule_configurations',
             title: 'BR Overwrite',
-            component: BROverwrite
+            component: BROverwrite,
+            rowComponent: BROverwriteRow
         }, {
             filterName: 'sql_expression',
             title: 'SQL Expression',
@@ -126,6 +128,9 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
             case 'default_value':
                 param[field.targetField] = field.value;
                 return { filter_name: filterName, params: param };
+            case 'get_business_rule_configurations':
+                param[field.targetField] = field.rule;
+                return { filter_name: filterName, params: param };
             default:
                 return { filter_name: filterName, params: field };
         }
@@ -143,6 +148,9 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
             this.props.actions.updateFilter(filter);
         } else if (filter.filter_name === 'default_value') {
             filter.params[field.targetField] = field.value;
+            this.props.actions.updateFilter(filter);
+        } else if (filter.filter_name === 'get_business_rule_configurations') {
+            filter.params[field.targetField] = field.rule;
             this.props.actions.updateFilter(filter);
         } else {
             filter.params.push(field);

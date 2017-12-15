@@ -1,45 +1,62 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 
-import { Card, CardHeader, CardText, TextField, RaisedButton, AutoComplete } from 'material-ui';
+import { Card, CardHeader, CardText, TextField, RaisedButton, Chip, AutoComplete } from 'material-ui';
 
-interface IDefaultValueRowProps {
+interface IBROverwriteRowProps {
     title?: string;
     targetField?: string;
-    value?: string;
+    rule?: any;
     onSave: (string, any) => void;
     rowId?: string;
     expanded?: boolean;
     options: string[];
 }
 
-interface IDefaultValueRowState {
+interface IBROverwriteRowState {
     expanded: boolean;
     targetField: string;
-    value: string;
+    columns: string[];
     errors: any;
+    searchText: string;
 }
+
+const chipStyle: React.CSSProperties = {
+    display: 'inline-block',
+    margin: 5
+};
+
+const chipLabelStyle: React.CSSProperties = {
+    position: 'relative',
+    bottom: 4
+};
+
+const chipDeleteIconStyle: React.CSSProperties = {
+    position: 'relative',
+    bottom: -4
+};
 
 const submitButtonsStyle: React.CSSProperties = {
     display: 'flex',
     justifyContent: 'flex-end'
 };
 
-export default class DefaultValueRow extends React.Component<IDefaultValueRowProps, IDefaultValueRowState> {
+export default class BROverwriteRow extends React.Component<IBROverwriteRowProps, IBROverwriteRowState> {
     constructor(props, context) {
         super(props, context);
 
         this.state = {
             expanded: false,
             targetField: this.props.targetField || '',
-            value: this.props.value || '',
-            errors: {}
+            columns: _.assign([], (this.props.rule || {}).columns || []),
+            errors: {},
+            searchText: ''
         };
 
         this.toggleExpansion = this.toggleExpansion.bind(this);
         this.onTextChange = this.onTextChange.bind(this);
         this.updateInput = this.updateInput.bind(this);
-        this.updateValue = this.updateValue.bind(this);
+        this.addNew = this.addNew.bind(this);
         this.getDefaultState = this.getDefaultState.bind(this);
         this.cancelUpdates = this.cancelUpdates.bind(this);
         this.updateFilter = this.updateFilter.bind(this);
@@ -51,21 +68,6 @@ export default class DefaultValueRow extends React.Component<IDefaultValueRowPro
         const field = event.target.id;
         this.setState({ [field]: value });
     }
-    private getOptions() {
-        // format options
-        return _.map(this.props.options, option => {
-            return { text: `$${option}`, value: `$${option}` };
-        });
-    }
-    private updateInput(value: string, dataSource: string[], params: any) {
-        this.setState({ value });
-    }
-    private updateValue(field, index) {
-        this.setState({ value: field.value });
-    }
-    private filterOptions(searchText, key) {
-        return (key.toLowerCase().indexOf(searchText.toLowerCase()) !== -1);
-    }
     private cancelUpdates() {
         this.setState(this.getDefaultState());
     }
@@ -74,7 +76,7 @@ export default class DefaultValueRow extends React.Component<IDefaultValueRowPro
         // validate fields
         const mandatoryFields = [
             'targetField',
-            'value'
+            'columns'
         ];
 
         // rest errors
@@ -82,8 +84,8 @@ export default class DefaultValueRow extends React.Component<IDefaultValueRowPro
         _.forEach(mandatoryFields, (field) => {
             if (!this.state[field]) {
                 errors[field] = 'required';
-            } else if (field === 'value' && !_.includes(this.props.options, this.state.value.slice(1))) {
-                errors[field] = 'invalid';
+            } else if (field === 'columns' && !(this.state.columns.length > 0)) {
+                errors[field] = 'required';
             }
         });
 
@@ -93,14 +95,50 @@ export default class DefaultValueRow extends React.Component<IDefaultValueRowPro
         }
 
         this.setState({ errors });
-        this.props.onSave(this.props.rowId, { targetField: this.state.targetField, value: this.state.value });
+        this.props.onSave(this.props.rowId, { targetField: this.state.targetField, rule: _.assign({}, this.props.rule, { columns: this.state.columns }) });
     }
     private getDefaultState() {
         return {
             targetField: this.props.targetField || '',
-            value: this.props.value || '',
-            errors: {}
+            columns: _.assign([], (this.props.rule || {}).columns || []),
+            errors: {},
+            searchText: ''
         };
+    }
+    private filterOptions(searchText, key) {
+        return (key.toLowerCase().indexOf(searchText.toLowerCase()) !== -1);
+    }
+    private removeField(column) {
+        const { columns } = this.state;
+        const index = _.indexOf(columns, column);
+        if (index >= 0) {
+            columns.splice(index, 1);
+        }
+
+        this.setState({ columns });
+    }
+    private getOptions() {
+        let { options } = this.props;
+        // remove options they are already present from auto complete list
+        options = _.filter(options, (option) => {
+            return !_.includes(this.state.columns, `$${option}`);
+        });
+
+        // format options
+        return _.map(options, option => {
+            return { text: option, value: `$${option}` };
+        });
+    }
+    private updateInput(searchText: string, dataSource: string[], params: any) {
+        this.setState({ searchText });
+    }
+    private addNew(column, index) {
+        const { columns } = this.state;
+        if (!_.includes(columns, column.value)) {
+            columns.push(column.value);
+        }
+
+        this.setState({ searchText: '', columns });
     }
     public render(): JSX.Element {
         return (<Card expanded={this.props.expanded || this.state.expanded} onExpandChange={this.toggleExpansion} style={{ margin: '10px 0' }}>
@@ -121,17 +159,32 @@ export default class DefaultValueRow extends React.Component<IDefaultValueRowPro
                     />
 
                     <AutoComplete
-                        floatingLabelText="Default Value"
+                        floatingLabelText="Columns"
+                        floatingLabelFixed={true}
                         fullWidth={true}
-                        searchText={this.state.value}
+                        hintText="Add new"
+                        searchText={this.state.searchText}
                         onUpdateInput={this.updateInput}
-                        onNewRequest={this.updateValue}
+                        onNewRequest={this.addNew}
                         dataSource={this.getOptions()}
                         filter={this.filterOptions}
                         dataSourceConfig={{ text: 'text', value: 'value' }}
                         openOnFocus={true}
-                        errorText={this.state.errors.value}
+                        errorText={this.state.errors.columns}
                     />
+                    <div className="columns-container">
+                        {_.map(this.state.columns, (field) => {
+                            return <Chip
+                                key={field}
+                                onRequestDelete={() => this.removeField(field)}
+                                style={chipStyle}
+                                labelStyle={chipLabelStyle}
+                                deleteIconStyle={chipDeleteIconStyle}
+                            >
+                                {field}
+                            </Chip>;
+                        })}
+                    </div>
                     <div style={submitButtonsStyle}>
                         <RaisedButton label="Cancel" onClick={this.cancelUpdates} style={{ marginRight: 10 }} />
                         <RaisedButton label="Save" onClick={this.updateFilter} primary={true} />
