@@ -9,6 +9,7 @@ Instructions:
 * CSS re-organize. (Where to use inline, where to use less)
 * Unit test coverage.
 * Enable redux-immutable-state-invariant. (Or use immutable.js or something)
+* Handle if anything crashes in the client side.
 
 
 
