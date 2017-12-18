@@ -7,7 +7,6 @@ import { withRouter } from 'react-router';
 import { RaisedButton, IconMenu, MenuItem } from 'material-ui';
 
 import * as contentActions from '../../actions/contentActions';
-import './filters/filterForm.css';
 import {
     FilterRow,
     CommonFilter,
@@ -24,6 +23,7 @@ import {
     ConcatenatedFieldRow
 } from './filters';
 import AddFilterRow from './addFilterRow';
+import './filters/filterForm.css';
 
 interface IFilter {
     filter_name: string;
@@ -193,7 +193,7 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
                 <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%', flexDirection: 'row', flexWrap: 'wrap' }}>
                     {_.map(config.filters, (filter) => {
                         const filterComponent: any = _.find(this.filters, { filterName: filter.filter_name });
-                        return (<div className="col-md-6" key={filter.filter_name}>
+                        return (<div style={{ flexBasis: '48%', margin: '10px' }} key={filter.filter_name}>
                             {filterComponent && <FilterRow key={filter.filter_name} fields={this.getAutoCompleteOptions(filter.filter_name)} params={filter.params} onSave={this.onSave} {...filterComponent} />}
                         </div>);
                     })}

@@ -152,28 +152,34 @@ export default class CommonFilter extends React.Component<IFilterProps, ICommonF
                     errorText={this.state.errors.data_partner_name}
                     onChange={this.onTextChange}
                 />
-                <div style={multiFieldContainerStyle}>
-                    <SelectField
-                        id="header_row_count"
-                        value={this.state.header_row_count}
-                        onChange={this.onSelectHeaderRow}
-                        floatingLabelText="Header Rows"
-                    >
-                        {_.times(10, (c) => {
-                            return <MenuItem key={c} value={c} primaryText={c} />;
-                        })}
-                    </SelectField>
+                <div className="multi-field-container" style={multiFieldContainerStyle}>
+                    <div className="col-md-5">
+                        <SelectField
+                            id="header_row_count"
+                            fullWidth={true}
+                            value={this.state.header_row_count}
+                            onChange={this.onSelectHeaderRow}
+                            floatingLabelText="Header Rows"
+                        >
+                            {_.times(10, (c) => {
+                                return <MenuItem key={c} value={c} primaryText={c} />;
+                            })}
+                        </SelectField>
+                    </div>
 
-                    <SelectField
-                        id="trailer_row_count"
-                        value={this.state.trailer_row_count}
-                        onChange={this.onSelectFooterRow}
-                        floatingLabelText="Footer Rows"
-                    >
-                        {_.times(10, (c) => {
-                            return <MenuItem key={c} value={c} primaryText={`${c}`} />;
-                        })}
-                    </SelectField>
+                    <div className="col-md-5">
+                        <SelectField
+                            id="trailer_row_count"
+                            fullWidth={true}
+                            value={this.state.trailer_row_count}
+                            onChange={this.onSelectFooterRow}
+                            floatingLabelText="Footer Rows"
+                        >
+                            {_.times(10, (c) => {
+                                return <MenuItem key={c} value={c} primaryText={`${c}`} />;
+                            })}
+                        </SelectField>
+                    </div>
                 </div>
                 <div style={submitButtonsStyle}>
                     <RaisedButton label="Cancel" onClick={this.cancelUpdates} style={{ marginRight: 10 }} />

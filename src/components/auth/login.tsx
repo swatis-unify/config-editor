@@ -33,7 +33,7 @@ class LogInPage extends React.Component<null, null> {
         return (
             <div className="login-wrapper">
                 <div style={{ display: 'flex', justifyContent: 'center', position: 'relative', top: '40%' }}>
-                    <Card className="col-md-5">
+                    <Card className="col-md-4">
                         <CardText style={{ textAlign: 'center' }}>
                             <h3>Login with GitHub to get started</h3>
                             <RaisedButton

@@ -32,7 +32,8 @@ export default class FilterRow extends React.Component<IFilterProps, IFilterStat
         this.props.onSave(this.props.filterName, params);
     }
     public render(): JSX.Element {
-        return (<Card expanded={this.state.expanded} onExpandChange={this.toggleExpansion} style={{ margin: '10px 0' }}>
+        const cardStyle: React.CSSProperties = this.state.expanded ? { resize: 'horizontal', overflow: 'auto', minWidth: '70%' } : {};
+        return (<Card expanded={this.state.expanded} onExpandChange={this.toggleExpansion} style={cardStyle}>
             <CardHeader
                 showExpandableButton={true}
                 actAsExpander={true}

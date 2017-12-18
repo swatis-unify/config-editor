@@ -107,26 +107,32 @@ export default class SplitByFilterRow extends React.Component<ISplitByFilterRowP
                         onChange={this.onTextChange}
                     />
 
-                    <div style={multiFieldContainerStyle}>
-                        <TextField
-                            id="start"
-                            type="number"
-                            min="0"
-                            floatingLabelText="Start"
-                            value={this.state.start}
-                            errorText={this.state.errors.start}
-                            onChange={this.onTextChange}
-                        />
+                    <div className="multi-field-container" style={multiFieldContainerStyle}>
+                        <div className="col-md-5">
+                            <TextField
+                                fullWidth={true}
+                                id="start"
+                                type="number"
+                                min="0"
+                                floatingLabelText="Start"
+                                value={this.state.start}
+                                errorText={this.state.errors.start}
+                                onChange={this.onTextChange}
+                            />
+                        </div>
 
-                        <TextField
-                            id="end"
-                            type="number"
-                            min="0"
-                            floatingLabelText="End"
-                            value={this.state.end}
-                            errorText={this.state.errors.end}
-                            onChange={this.onTextChange}
-                        />
+                        <div className="col-md-5">
+                            <TextField
+                                fullWidth={true}
+                                id="end"
+                                type="number"
+                                min="0"
+                                floatingLabelText="End"
+                                value={this.state.end}
+                                errorText={this.state.errors.end}
+                                onChange={this.onTextChange}
+                            />
+                        </div>
                     </div>
                     <div style={submitButtonsStyle}>
                         <RaisedButton label="Cancel" onClick={this.cancelUpdates} style={{ marginRight: 10 }} />
