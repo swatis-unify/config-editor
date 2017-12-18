@@ -88,8 +88,17 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             }
         }
     }
-    public onCreateNew(feedUrl) {
-        this.props.actions.createConfig(feedUrl);
+    public onCreateNew(name) {
+        const feed = _.find(this.props.feeds, { name });
+        if (feed) {
+            if (this.props.currentConfig.path === feed.path) {
+                this.props.layoutActions.setRoute('/partnerconfig', { path: feed.path, branch: this.props.currentBranch, copyasnew: true });
+            } else {
+                this.props.actions.fetchConfig(feed, this.props.currentBranch).then(() => {
+                    this.props.layoutActions.setRoute('/partnerconfig', { path: feed.path, branch: this.props.currentBranch, copyasnew: true });
+                });
+            }
+        }
     }
     public updateFilter(filterName, value) {
         const { filter } = this.state;

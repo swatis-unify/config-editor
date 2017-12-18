@@ -197,6 +197,20 @@ const config: webpack.Configuration = {
                     .then(() => { res.json({ "status": "OK" }); })
                     .catch((error) => { res.status(500).send(JSON.stringify(error)); });
             });
+
+            app.post('/createNewFile', jsonParser, (req, res) => {
+                const { fileName, contents, sha, branch } = req.body;
+
+                Github.instance.pushChanges(apiConfig.repoOwner,
+                    apiConfig.repoName,
+                    `${apiConfig.sourcePath}/${fileName}`,
+                    branch,
+                    contents,
+                    sha
+                )
+                    .then(() => { res.json({ "status": "OK" }); })
+                    .catch((error) => { res.status(500).send(JSON.stringify(error)); });
+            });
         }
     },
     node: {

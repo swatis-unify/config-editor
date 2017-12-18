@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router';
 
-import { RaisedButton, IconMenu, MenuItem } from 'material-ui';
+import { RaisedButton, IconMenu, MenuItem, Dialog, TextField, FlatButton } from 'material-ui';
 
 import * as contentActions from '../../actions/contentActions';
 import {
@@ -23,6 +23,7 @@ import {
     ConcatenatedFieldRow
 } from './filters';
 import AddFilterRow from './addFilterRow';
+import FileRenameDialog from './fileRenameDialog';
 import './filters/filterForm.css';
 
 interface IFilter {
@@ -42,7 +43,7 @@ interface IPartnerConfigProps {
     actions: any;
 }
 
-class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedFilter: string }> {
+class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedFilter: string, showDialog: boolean }> {
     private filters: any[];
     constructor(props, context) {
         super(props, context);
@@ -83,13 +84,15 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
             rowComponent: ConcatenatedFieldRow
         }];
 
-        this.state = { selectedFilter: '' };
+        this.state = { selectedFilter: '', showDialog: false };
 
         this.onSave = this.onSave.bind(this);
         this.onSaveNew = this.onSaveNew.bind(this);
         this.onAddFilter = this.onAddFilter.bind(this);
         this.pushConfig = this.pushConfig.bind(this);
         this.getNewFilterForm = this.getNewFilterForm.bind(this);
+        this.cancelDialog = this.cancelDialog.bind(this);
+        this.submitDialog = this.submitDialog.bind(this);
     }
     public componentWillMount() {
         // Enable page reload. Fetch configs when page is reloaded.
@@ -106,8 +109,27 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
             }
         }
     }
+    private cancelDialog() {
+        this.setState({ showDialog: false });
+    }
+    private submitDialog(fileName) {
+        console.log('submit form validate');
+        console.log('push configs as anew file');
+        this.setState({ showDialog: false });
+        this.props.actions.createConfig(fileName, this.props.branch, this.props.config);
+        // this.props.actions.pushConfig(this.props.branch, this.props.config);
+    }
     private pushConfig() {
-        this.props.actions.pushConfig(this.props.branch, this.props.config);
+        const { search } = window.location;
+        const params = new URLSearchParams(search);
+
+        const copyAsNew = params.get('copyasnew');
+        if (copyAsNew) {
+            this.setState({ showDialog: true });
+            console.log('show popup form');
+        } else {
+            this.props.actions.pushConfig(this.props.branch, this.props.config);
+        }
     }
     public onSave(filterName, params) {
         const filter = { filter_name: filterName, params };
@@ -199,6 +221,7 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
                     })}
                 </div>
 
+                <FileRenameDialog isOpen={this.state.showDialog} onCancel={this.cancelDialog} onSave={this.submitDialog} />
                 <div className="submit-buttons col-md-12 text-center" style={{ margin: '10px 0' }}>
                     <RaisedButton label="Save" primary={true} onClick={this.pushConfig} style={{ margin: '0 5px' }} />
                 </div>

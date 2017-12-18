@@ -121,6 +121,23 @@ export const resetConfig = () => {
     return { type: types.RESET_CONFIG };
 };
 
+export const createConfig = (fileName: string, branch: string, config: { config: any; sha: string, path: string }) => {
+    const contents = window.btoa(JSON.stringify(config.config, null, 4));
+    const { path, sha } = config;
+
+    return (dispatch) => {
+        dispatch(loaderActions.startCall());
+        return axios
+            .post('/createNewFile', { fileName, contents, sha, branch })
+            .then((response) => {
+                dispatch(loaderActions.callSuccess());
+            })
+            .catch(error => {
+                dispatch(loaderActions.callFailure());
+            });
+    };
+};
+
 export const pushConfig = (branch: string, config: { config: any; sha: string, path: string }) => {
     const contents = window.btoa(JSON.stringify(config.config, null, 4));
     const { path, sha } = config;

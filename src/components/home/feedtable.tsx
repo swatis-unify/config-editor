@@ -82,8 +82,8 @@ export default class FeedTable extends React.Component<IFeedTableProps, null> {
         this.props.onEdit(feedName);
     }
     private createNewFeed(event) {
-        const feedUrl = event.currentTarget.id;
-        this.props.onCreateNew(feedUrl);
+        const feedName = event.currentTarget.id;
+        this.props.onCreateNew(feedName);
     }
     public render(): JSX.Element {
         return (
@@ -104,7 +104,7 @@ export default class FeedTable extends React.Component<IFeedTableProps, null> {
                                 <TableRowColumn>
                                     <div>
                                         <RaisedButton id={feed.name} label="Edit" primary={true} onClick={this.editFeed} style={{ margin: '0 5px' }} />
-                                        <RaisedButton id={feed.download_url} label="Create As New" secondary={true} onClick={this.createNewFeed} style={{ margin: '0 5px' }} />
+                                        <RaisedButton id={feed.name} label="Create As New" secondary={true} onClick={this.createNewFeed} style={{ margin: '0 5px' }} />
                                     </div>
                                 </TableRowColumn>
                             </TableRow>
