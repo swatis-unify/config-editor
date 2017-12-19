@@ -9,7 +9,6 @@ import * as session from 'express-session';
 import * as bodyParser from 'body-parser';
 
 // Plugins
-// import * as HtmlWebpackPlugin from 'html-webpack-plugin';
 import * as ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 const sourcePath: string = path.join(__dirname, './src');
@@ -25,13 +24,6 @@ const plugins: webpack.Plugin[] = [
         filename: 'styles.css',
         disable: true
     }),
-    // new HtmlWebpackPlugin({
-    //     title: 'Unify'
-    // })
-    // new CircularDependencyPlugin({
-    //     // exclude detection of files based on a RegExp
-    //     exclude: /a\.js|node_modules/,
-    // })
 ];
 
 
