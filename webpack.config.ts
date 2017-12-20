@@ -137,7 +137,7 @@ const config: webpack.Configuration = {
                 }
             });
 
-            app.get('/contents', (req, res) => {
+            app.get('/configs', (req, res) => {
                 const branch = req.query.branch;
                 if (!(req.session.user && req.session.user.loggedIn)) {
                     res.status(401).send('Login required');

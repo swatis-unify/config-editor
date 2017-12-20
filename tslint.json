@@ -77,7 +77,7 @@
             false
         ],
         //tslint-react
-        "jsx-no-lambda": true,
+        "jsx-no-lambda": false,
         "jsx-self-close": true,
         "jsx-wrap-multiline": false,
         "jsx-curly-spacing": false,

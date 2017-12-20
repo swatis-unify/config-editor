@@ -9,6 +9,7 @@ import currentBranch from './currentBranchReducer';
 import authFailureStatus from './authFailureStatusReducer';
 import apiFailureStatus from './apiFailureStatusReducer';
 import currentConfig from './configReducer';
+import configs from '../configs/configsReducers';
 
 const rootReducer = combineReducers({
     businessRules,
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
     currentBranch,
     currentConfig,
     authFailureStatus,
-    apiFailureStatus
+    apiFailureStatus,
+    configs
 });
 
 export default rootReducer;
