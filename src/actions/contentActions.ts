@@ -47,27 +47,7 @@ const createFeeds = (contents) => {
     return { feeds };
 };
 
-export const setBranch = (branch: string) => {
-    return { type: types.UPDATE_CURRENT_BRANCH, branch };
-};
 
-const updateBranches = (branches) => {
-    return { type: types.UPDATE_BRANCHES, branches };
-};
-
-export const fetchBranches = () => {
-    return (dispatch) => {
-        dispatch(loaderActions.startCall());
-        return axios.get('/branches')
-            .then((response) => {
-                dispatch(updateBranches({ branches: response.data }));
-                dispatch(loaderActions.callSuccess());
-            }).catch((error) => {
-                dispatch(failureActions.apiFailed(error.request.status));
-                dispatch(loaderActions.callFailure());
-            });
-    };
-};
 
 const loadConfig = (config) => {
     return { type: types.LOAD_CONFIG, config };

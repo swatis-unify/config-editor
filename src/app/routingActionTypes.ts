@@ -1,0 +1,2 @@
+export const CHANGE_ROUTE = 'CHANGE_ROUTE';
+export const TOGGLE_LEFT_DRAWER = 'TOGGLE_LEFT_DRAWER';

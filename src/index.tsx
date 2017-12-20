@@ -5,14 +5,14 @@ import createHistory from 'history/createBrowserHistory';
 import configureStore from './store/configureStore';
 import { Provider } from 'react-redux';
 import { Router, Route, IndexRoute } from 'react-router';
-import App from './components/app';
+import App from './App/app';
 import HomePage from './components/home/homePage';
 import routes from './routes';
 import '../node_modules/bootstrap/dist/css/bootstrap.css';
 
 const store = configureStore();
 const history = createHistory();
-const appRoutes = routes.map(route => <Route path={route.path} exact={true} component={route.component} key={route.id} />);
+const appRoutes = routes.map((route, key) => <Route path={route.path} exact={true} component={route.component} key={route.id} />);
 
 render(
     <Provider store={store}>

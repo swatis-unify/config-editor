@@ -1,25 +1,26 @@
 import * as React from 'react';
-import authConfig from './authConfig';
 
 import { Card, CardHeader, CardText, RaisedButton } from 'material-ui';
 
-import GithubIcon from '../common/githubIcon';
-import './loginStyles.css';
+import GithubIcon from '../components/common/githubIcon';
+import style from './loginStyle';
+
+import * as loginActions from './loginActions';
+import config from './config';
 
 class LogInPage extends React.Component<null, null> {
     constructor(props, context) {
         super(props, context);
     }
     private startLoginProcess() {
-        console.log('start login called');
         // redirect to github
-        const authUrl = authConfig.authUrl;
+        const authUrl = config.authUrl;
         const params = {
-            client_id: authConfig.clientId,
-            redirect_uri: authConfig.redirectUri,
-            scope: authConfig.scope,
-            state: authConfig.state,
-            allow_signup: authConfig.allowSignup
+            client_id: config.clientId,
+            redirect_uri: config.redirectUri,
+            scope: config.scope,
+            state: config.state,
+            allow_signup: config.allowSignup
         };
 
         const query = Object.keys(params)
@@ -30,10 +31,10 @@ class LogInPage extends React.Component<null, null> {
     }
     public render(): JSX.Element {
         return (
-            <div className="login-wrapper">
-                <div style={{ display: 'flex', justifyContent: 'center', position: 'relative', top: '40%' }}>
-                    <Card className="col-md-4">
-                        <CardText style={{ textAlign: 'center' }}>
+            <div style={style.wrapperStyle}>
+                <div style={style.loginFormContainer}>
+                    <Card>
+                        <CardText style={style.cardText}>
                             <h3>Login with GitHub to get started</h3>
                             <RaisedButton
                                 primary={true}

@@ -12,6 +12,7 @@ export default {
     feeds: [],
     configs: [],
     callsInProgress: 0,
+    branches: [],
     currentBranch: '',
     currentConfig: { config: { filters: [] }, sha: '', path: '' },
     authFailureCode: null,

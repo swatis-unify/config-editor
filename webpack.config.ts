@@ -99,9 +99,28 @@ const config: webpack.Configuration = {
         before(app) {
             app.use(session({ secret: '123abc' }));
             const jsonParser = bodyParser.json();
+            app.get('/startLogin', (req, res) => {
+                const authUrl = apiConfig.authUrl;
+                const params = {
+                    client_id: apiConfig.clientId,
+                    redirect_uri: apiConfig.redirectUri,
+                    scope: apiConfig.scope,
+                    state: apiConfig.state,
+                    allow_signup: apiConfig.allowSignup
+                };
+
+                const query = Object.keys(params)
+                    .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+                    .join('&');
+
+                res.redirect(`${authUrl}?${query}`);
+            });
             app.get('/accesstoken', (req, res) => {
-                const code = req.query.code;
+                const { code, state } = req.query;
                 req.session.user = {};
+                if (state !== apiConfig.state) {
+                    res.status(401).send('Login required');
+                }
                 Github.instance.getAccessToken(apiConfig.clientId, apiConfig.clientSecret, code)
                     .then((response) => {
                         req.session.user.loggedIn = true;

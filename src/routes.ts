@@ -4,11 +4,8 @@ import Home from 'material-ui/svg-icons/action/home';
 import PartnerConfigPage from './components/partner-config/partnerConfig';
 import PartnerConfig from 'material-ui/svg-icons/action/swap-horiz';
 
-import BusinessRulesPage from './components/business-rules/businessRules';
-import BusinessGroup from 'material-ui/svg-icons/social/group';
-
-import LogInPage from './components/auth/login';
-import LogInSuccessPage from './components/auth/loginSuccess';
+import LogInPage from './login/login';
+import LogInSuccessPage from './login/loginSuccess';
 
 const routes = [{
     path: '/',

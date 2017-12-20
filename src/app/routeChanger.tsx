@@ -28,7 +28,6 @@ class RouteChanger extends React.Component<IRouteChangerProps, null> {
             this.props.history.push(path);
         }
     }
-
     public render(): JSX.Element {
         return <div />;
     }
