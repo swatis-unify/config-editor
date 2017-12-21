@@ -40,7 +40,9 @@ const tableStyle: React.CSSProperties = {
     header: { backgroundColor: '#009688' },
     headerText: { fontSize: 16, color: 'white' },
     sortableHeader: { position: 'relative', top: -4, cursor: 'pointer' },
-    sortButton: { top: 7 }
+    sortButton: { top: 7 },
+    dataPartner: { textTransform: 'UPPERCASE' },
+    button: { margin: '0 5px' }
 };
 
 export default class FeedTable extends React.Component<IFeedTableProps, null> {
@@ -99,12 +101,12 @@ export default class FeedTable extends React.Component<IFeedTableProps, null> {
                     {this.props.feeds.map(feed => {
                         return (
                             <TableRow hoverable={true} selectable={false} key={feed.name}>
-                                <TableRowColumn style={{ textTransform: 'UPPERCASE' }}>{feed.data_partner_name}</TableRowColumn>
+                                <TableRowColumn style={tableStyle.dataPartner}>{feed.data_partner_name}</TableRowColumn>
                                 <TableRowColumn>{feed.feed_name}</TableRowColumn>
                                 <TableRowColumn>
                                     <div>
-                                        <RaisedButton id={feed.name} label="Edit" primary={true} onClick={this.editFeed} style={{ margin: '0 5px' }} />
-                                        <RaisedButton id={feed.name} label="Create As New" secondary={true} onClick={this.createNewFeed} style={{ margin: '0 5px' }} />
+                                        <RaisedButton id={feed.name} label="Edit" primary={true} onClick={this.editFeed} style={tableStyle.button} />
+                                        <RaisedButton id={feed.name} label="Create As New" secondary={true} onClick={this.createNewFeed} style={tableStyle.button} />
                                     </div>
                                 </TableRowColumn>
                             </TableRow>

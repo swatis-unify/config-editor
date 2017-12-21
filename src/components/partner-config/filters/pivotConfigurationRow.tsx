@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as _ from 'lodash';
 
 import { Card, CardHeader, CardText, TextField, RaisedButton, AutoComplete, Divider } from 'material-ui';
-
+import style from './filterFormStyle';
 interface IConfigRowProps {
     targetField: string;
     value: string;
@@ -14,11 +14,6 @@ interface IConfigRowState {
     value: string;
     errors: any;
 }
-
-const multiFieldContainerStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'space-between'
-};
 
 class ConfigRow extends React.Component<IConfigRowProps, IConfigRowState> {
     constructor(props, context) {
@@ -52,8 +47,8 @@ class ConfigRow extends React.Component<IConfigRowProps, IConfigRowState> {
         this.setState({ [field]: value });
     }
     public render(): JSX.Element {
-        return (<div className="multi-field-container" style={multiFieldContainerStyle}>
-            <div className="col-md-5">
+        return (<div style={style.multiFieldContainer}>
+            <div style={style.multiFieldItem}>
                 <TextField
                     id="targetField"
                     fullWidth={true}
@@ -63,7 +58,7 @@ class ConfigRow extends React.Component<IConfigRowProps, IConfigRowState> {
                     onChange={this.onTextChange}
                 />
             </div>
-            <div className="col-md-5">
+            <div style={style.multiFieldItem}>
                 <AutoComplete
                     fullWidth={true}
                     floatingLabelText="Value"
@@ -97,10 +92,7 @@ interface IPivotConfigurationRowState {
     errors: any;
 }
 
-const submitButtonsStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'flex-end'
-};
+const dividerStyle: React.CSSProperties = { margin: '5px 0', height: 2 };
 
 export default class PivotConfigurationRow extends React.Component<IPivotConfigurationRowProps, IPivotConfigurationRowState> {
     constructor(props, context) {
@@ -128,7 +120,7 @@ export default class PivotConfigurationRow extends React.Component<IPivotConfigu
     }
     public render(): JSX.Element {
         console.log(this.props.field_mapping);
-        return (<Card expanded={this.props.expanded || this.state.expanded} onExpandChange={this.toggleExpansion} style={{ margin: '10px 0' }}>
+        return (<Card expanded={this.props.expanded || this.state.expanded} onExpandChange={this.toggleExpansion} style={style.card}>
             <CardHeader
                 showExpandableButton={true}
                 actAsExpander={true}
@@ -148,7 +140,7 @@ export default class PivotConfigurationRow extends React.Component<IPivotConfigu
                     <div className="mappings-container">
                         {_.map(this.props.field_mapping, (mapping, i) => {
                             return (<div key={i}>
-                                <Divider style={{ margin: '5px 0', height: 2 }} />
+                                <Divider style={dividerStyle} />
                                 {_.map(mapping, (value: string, targetField: string) => {
                                     return <ConfigRow key={targetField} value={value} targetField={targetField} options={this.props.options} />;
                                 })}

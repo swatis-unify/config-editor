@@ -12,6 +12,7 @@ import * as loaderActions from '../../actions/loaderActions';
 
 import FeedTable from './feedtable';
 import GithubIcon from '../common/githubIcon';
+import style from './homePageStyle';
 
 interface IHomePageProps {
     actions: any;
@@ -129,7 +130,7 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
         return (
             <div>
-                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <div style={style.topBarContainer}>
                     <SelectField
                         floatingLabelText="Branch"
                         value={this.props.currentBranch}
@@ -140,12 +141,12 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                     <RaisedButton
                         primary={true}
                         label="Sync with Github"
-                        style={{ margin: '0 5px', height: 36, position: 'relative', top: 28 }}
+                        style={style.pullContentButton}
                         onClick={this.syncWithGithub}
                         icon={<GithubIcon height={20} width={20} />}
                     />
                 </div>
-                <div style={{ margin: '10px 0' }}>
+                <div style={style.tableContainer}>
                     {(this.props.feeds.length > 0) && <FeedTable headers={this.tableHeaders} filter={this.state.filter} feeds={this.getFilteredFeeds()} onSort={this.updateFilter} onEdit={this.onEdit} onCreateNew={this.onCreateNew} />}
                 </div>
             </div>

@@ -27,7 +27,6 @@ export default class AddFilterRow extends React.Component<IFilterProps, IFilterS
         this.getOrBuildParams = this.getOrBuildParams.bind(this);
     }
     private onSave(i, row) {
-        console.log('row: ', row);
         this.props.onSave(this.props.filterName, row);
     }
     private getOrBuildParams() {

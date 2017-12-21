@@ -2,6 +2,8 @@ import * as React from 'react';
 import * as _ from 'lodash';
 
 import { Card, CardHeader, CardText, TextField, RaisedButton } from 'material-ui';
+import style from './filterFormStyle';
+
 interface ISplitByFilterRowState {
     expanded: boolean;
     name: string;
@@ -19,15 +21,6 @@ interface ISplitByFilterRowProps {
     rowId: number;
     expanded?: boolean;
 }
-const multiFieldContainerStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'space-between'
-};
-
-const submitButtonsStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'flex-end'
-};
 export default class SplitByFilterRow extends React.Component<ISplitByFilterRowProps, ISplitByFilterRowState> {
     constructor(props, context) {
         super(props, context);
@@ -90,7 +83,7 @@ export default class SplitByFilterRow extends React.Component<ISplitByFilterRowP
         this.setState(this.getDefaultState());
     }
     public render(): JSX.Element {
-        return (<Card expanded={this.props.expanded || this.state.expanded} onExpandChange={this.toggleExpansion} style={{ margin: '10px 0' }}>
+        return (<Card expanded={this.props.expanded || this.state.expanded} onExpandChange={this.toggleExpansion} style={style.card}>
             <CardHeader
                 showExpandableButton={true}
                 actAsExpander={true}
@@ -107,8 +100,8 @@ export default class SplitByFilterRow extends React.Component<ISplitByFilterRowP
                         onChange={this.onTextChange}
                     />
 
-                    <div className="multi-field-container" style={multiFieldContainerStyle}>
-                        <div className="col-md-5">
+                    <div style={style.multiFieldContainer}>
+                        <div style={style.multiFieldItem}>
                             <TextField
                                 fullWidth={true}
                                 id="start"
@@ -121,7 +114,7 @@ export default class SplitByFilterRow extends React.Component<ISplitByFilterRowP
                             />
                         </div>
 
-                        <div className="col-md-5">
+                        <div style={style.multiFieldItem}>
                             <TextField
                                 fullWidth={true}
                                 id="end"
@@ -134,8 +127,8 @@ export default class SplitByFilterRow extends React.Component<ISplitByFilterRowP
                             />
                         </div>
                     </div>
-                    <div style={submitButtonsStyle}>
-                        <RaisedButton label="Cancel" onClick={this.cancelUpdates} style={{ marginRight: 10 }} />
+                    <div style={style.buttonContainer}>
+                        <RaisedButton label="Cancel" onClick={this.cancelUpdates} style={style.cancelButton} />
                         <RaisedButton label="Save" onClick={this.updateFilter} primary={true} />
                     </div>
                 </form>

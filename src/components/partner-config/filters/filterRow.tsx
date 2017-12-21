@@ -16,6 +16,12 @@ interface IFilterState {
     expanded: boolean;
 }
 
+const resizableCardStyle: React.CSSProperties = {
+    resize: 'horizontal',
+    overflow: 'auto',
+    minWidth: '70%'
+};
+
 export default class FilterRow extends React.Component<IFilterProps, IFilterState> {
     constructor(props, context) {
         super(props, context);
@@ -32,7 +38,7 @@ export default class FilterRow extends React.Component<IFilterProps, IFilterStat
         this.props.onSave(this.props.filterName, params);
     }
     public render(): JSX.Element {
-        const cardStyle: React.CSSProperties = this.state.expanded ? { resize: 'horizontal', overflow: 'auto', minWidth: '70%' } : {};
+        const cardStyle: React.CSSProperties = this.state.expanded ? resizableCardStyle : {};
         return (<Card expanded={this.state.expanded} onExpandChange={this.toggleExpansion} style={cardStyle}>
             <CardHeader
                 showExpandableButton={true}

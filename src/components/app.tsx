@@ -12,6 +12,8 @@ import Loader from './common/loader';
 import ErrorSnackbar from './common/errorSnackbar';
 import theme from '../theme';
 
+import style from './appStyle';
+
 interface IAppProps {
     currentRoute: any;
     callsInProgress: number;
@@ -25,20 +27,15 @@ class App extends React.Component<IAppProps, null> {
         this.getContainerStyle = this.getContainerStyle.bind(this);
     }
     private getContainerStyle(): React.CSSProperties {
-        const style = {
-            marginTop: 44,
-            width: '100%',
-            transition: 'margin 0.5s ease-in-out',
-        };
         if (!this.props.currentRoute.sidebar) {
-            return style;
+            return style.containerStyle;
         }
-        return this.props.isDrawerOpen ? _.assign({ marginLeft: 220 }, style) : _.assign({ marginLeft: 50 }, style);
+        return this.props.isDrawerOpen ? _.assign({}, style.containerStyle, style.containerWithDrawer) : _.assign({}, style.containerStyle, style.containerWithoutDrawer);
     }
     public render(): JSX.Element {
         return (
             <MuiThemeProvider muiTheme={getMuiTheme(theme)}>
-                <div className="body" style={{ display: 'flex' }}>
+                <div className="body" style={style.body}>
                     <RouteChanger />
                     {(this.props.callsInProgress > 0) && <Loader />}
                     {this.props.currentRoute.sidebar && <TopAppBar />}

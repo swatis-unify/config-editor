@@ -24,7 +24,7 @@ import {
 } from './filters';
 import AddFilterRow from './addFilterRow';
 import FileRenameDialog from './fileRenameDialog';
-import './filters/filterForm.css';
+import style from './partnerConfigStyle';
 
 interface IFilter {
     filter_name: string;
@@ -59,12 +59,12 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, IPartnerCon
             filterName: 'get_configurations',
             title: 'Common',
             component: CommonFilter,
-            static: true
+            static: true // Note - static filter like common configuration can't be added
         }, {
             filterName: 'split_by_position',
             title: 'Split by Position',
-            component: SplitByFilter,
-            rowComponent: SplitByFilterRow
+            component: SplitByFilter, // used to render the card for the filter
+            rowComponent: SplitByFilterRow // used to render new filter form
         }, {
             filterName: 'get_pivot_configurations',
             title: 'Pivot Configuration',
@@ -192,7 +192,7 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, IPartnerCon
     }
     private getNewFilterForm(): JSX.Element {
         const filterComponent: any = _.find(this.filters, { filterName: this.state.selectedFilter });
-        return (<div style={{ width: '50%' }}>
+        return (<div style={style.newFilterRow}>
             {filterComponent && <AddFilterRow key={this.state.selectedFilter} fields={this.getAutoCompleteOptions(this.state.selectedFilter)} onSave={this.onSaveNew} {...filterComponent} />}
         </div>);
     }
@@ -224,10 +224,10 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, IPartnerCon
                     </IconMenu>
                 </div>
                 {this.state.selectedFilter && <div className="col-md-12">{this.getNewFilterForm()}</div>}
-                <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%', flexDirection: 'row', flexWrap: 'wrap' }}>
+                <div style={style.configContainer}>
                     {_.map(config.filters, (filter) => {
                         const filterComponent: any = _.find(this.filters, { filterName: filter.filter_name });
-                        return (<div style={{ flexBasis: '48%', margin: '10px' }} key={filter.filter_name}>
+                        return (<div style={style.filterRow} key={filter.filter_name}>
                             {filterComponent && <FilterRow key={filter.filter_name} fields={this.getAutoCompleteOptions(filter.filter_name)} params={filter.params} onSave={this.onSave} {...filterComponent} />}
                         </div>);
                     })}
@@ -240,8 +240,8 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, IPartnerCon
                     autoHideDuration={4000}
                     onRequestClose={this.hideSnackbar}
                 />
-                <div className="submit-buttons col-md-12 text-center" style={{ margin: '10px 0' }}>
-                    <RaisedButton label={this.state.submitInProgress ? "Saving..." : "Save"} primary={true} onClick={this.pushConfig} style={{ margin: '0 5px' }} />
+                <div className="submit-buttons col-md-12 text-center" style={style.buttonContainer}>
+                    <RaisedButton label={this.state.submitInProgress ? "Saving..." : "Save"} primary={true} onClick={this.pushConfig} style={style.button} />
                 </div>
             </div>
         );

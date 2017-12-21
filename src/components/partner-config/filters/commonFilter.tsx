@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 import { TextField, SelectField, RadioButton, RadioButtonGroup, MenuItem, RaisedButton } from 'material-ui';
-
+import style from './filterFormStyle';
 interface ICommonFilterParam {
     common: { data_partner_name: string; feed_name: string };
     ignore_lines: { params: { header_row_count: number, trailer_row_count: number } };
@@ -21,21 +21,6 @@ interface ICommonFilterState {
     fileType: string;
     errors: any;
 }
-
-const radioButtonStyle: React.CSSProperties = {
-    width: '50%',
-    display: 'inline-block'
-};
-
-const multiFieldContainerStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'space-between'
-};
-
-const submitButtonsStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'flex-end'
-};
 
 export default class CommonFilter extends React.Component<IFilterProps, ICommonFilterState> {
     private fileTypes: string[];
@@ -127,12 +112,12 @@ export default class CommonFilter extends React.Component<IFilterProps, ICommonF
                         value="csv"
                         label="CSV"
                         disabled={true}
-                        style={radioButtonStyle}
+                        style={style.radioButton}
                     />
                     <RadioButton
                         value="fixedWidth"
                         label="Fixed Width"
-                        style={radioButtonStyle}
+                        style={style.radioButton}
                     />
                 </RadioButtonGroup>
                 <TextField
@@ -152,8 +137,8 @@ export default class CommonFilter extends React.Component<IFilterProps, ICommonF
                     errorText={this.state.errors.data_partner_name}
                     onChange={this.onTextChange}
                 />
-                <div className="multi-field-container" style={multiFieldContainerStyle}>
-                    <div className="col-md-5">
+                <div style={style.multiFieldContainer}>
+                    <div style={style.multiFieldItem}>
                         <SelectField
                             id="header_row_count"
                             fullWidth={true}
@@ -167,7 +152,7 @@ export default class CommonFilter extends React.Component<IFilterProps, ICommonF
                         </SelectField>
                     </div>
 
-                    <div className="col-md-5">
+                    <div style={style.multiFieldItem}>
                         <SelectField
                             id="trailer_row_count"
                             fullWidth={true}
@@ -181,8 +166,8 @@ export default class CommonFilter extends React.Component<IFilterProps, ICommonF
                         </SelectField>
                     </div>
                 </div>
-                <div style={submitButtonsStyle}>
-                    <RaisedButton label="Cancel" onClick={this.cancelUpdates} style={{ marginRight: 10 }} />
+                <div style={style.buttonContainer}>
+                    <RaisedButton label="Cancel" onClick={this.cancelUpdates} style={style.cancelButton} />
                     <RaisedButton label="Save" onClick={this.updateFilter} primary={true} />
                 </div>
             </form>

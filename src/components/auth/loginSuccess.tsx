@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import * as authActions from '../../actions/authActions';
 import * as layoutActions from '../../actions/layoutActions';
 import authConfig from './authConfig';
+import style from './loginStyle';
 
 interface ILoginSuccessProps {
     authActions: any;
@@ -28,7 +29,7 @@ class LoginSuccessPage extends React.Component<ILoginSuccessProps, null> {
     }
 
     public render(): JSX.Element {
-        return (<div className="login-wrapper" />);
+        return (<div style={style.wrapper} />);
     }
 
 }

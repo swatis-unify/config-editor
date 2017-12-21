@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as _ from 'lodash';
 
 import { Card, CardHeader, CardText, TextField, RaisedButton, AutoComplete } from 'material-ui';
-
+import style from './filterFormStyle';
 interface IDefaultValueRowProps {
     title?: string;
     targetField?: string;
@@ -19,11 +19,6 @@ interface IDefaultValueRowState {
     value: string;
     errors: any;
 }
-
-const submitButtonsStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'flex-end'
-};
 
 export default class DefaultValueRow extends React.Component<IDefaultValueRowProps, IDefaultValueRowState> {
     constructor(props, context) {
@@ -103,7 +98,7 @@ export default class DefaultValueRow extends React.Component<IDefaultValueRowPro
         };
     }
     public render(): JSX.Element {
-        return (<Card expanded={this.props.expanded || this.state.expanded} onExpandChange={this.toggleExpansion} style={{ margin: '10px 0' }}>
+        return (<Card expanded={this.props.expanded || this.state.expanded} onExpandChange={this.toggleExpansion} style={style.card}>
             <CardHeader
                 showExpandableButton={true}
                 actAsExpander={true}
@@ -132,8 +127,8 @@ export default class DefaultValueRow extends React.Component<IDefaultValueRowPro
                         openOnFocus={true}
                         errorText={this.state.errors.value}
                     />
-                    <div style={submitButtonsStyle}>
-                        <RaisedButton label="Cancel" onClick={this.cancelUpdates} style={{ marginRight: 10 }} />
+                    <div style={style.buttonContainer}>
+                        <RaisedButton label="Cancel" onClick={this.cancelUpdates} style={style.cancelButton} />
                         <RaisedButton label="Save" onClick={this.updateFilter} primary={true} />
                     </div>
                 </form>

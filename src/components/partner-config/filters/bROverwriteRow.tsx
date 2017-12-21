@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as _ from 'lodash';
 
 import { Card, CardHeader, CardText, TextField, RaisedButton, Chip, AutoComplete } from 'material-ui';
+import style from './filterFormStyle';
 
 interface IBROverwriteRowProps {
     title?: string;
@@ -20,26 +21,6 @@ interface IBROverwriteRowState {
     errors: any;
     searchText: string;
 }
-
-const chipStyle: React.CSSProperties = {
-    display: 'inline-block',
-    margin: 5
-};
-
-const chipLabelStyle: React.CSSProperties = {
-    position: 'relative',
-    bottom: 4
-};
-
-const chipDeleteIconStyle: React.CSSProperties = {
-    position: 'relative',
-    bottom: -4
-};
-
-const submitButtonsStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'flex-end'
-};
 
 export default class BROverwriteRow extends React.Component<IBROverwriteRowProps, IBROverwriteRowState> {
     constructor(props, context) {
@@ -141,7 +122,7 @@ export default class BROverwriteRow extends React.Component<IBROverwriteRowProps
         this.setState({ searchText: '', columns });
     }
     public render(): JSX.Element {
-        return (<Card expanded={this.props.expanded || this.state.expanded} onExpandChange={this.toggleExpansion} style={{ margin: '10px 0' }}>
+        return (<Card expanded={this.props.expanded || this.state.expanded} onExpandChange={this.toggleExpansion} style={style.card}>
             <CardHeader
                 showExpandableButton={true}
                 actAsExpander={true}
@@ -176,17 +157,17 @@ export default class BROverwriteRow extends React.Component<IBROverwriteRowProps
                         {_.map(this.state.columns, (field) => {
                             return <Chip
                                 key={field}
-                                onRequestDelete={() => this.removeField(field)}
-                                style={chipStyle}
-                                labelStyle={chipLabelStyle}
-                                deleteIconStyle={chipDeleteIconStyle}
+                                onRequestDelete={() => this.removeField(field)} // lambda used, because can't pass the field through chip.
+                                style={style.chipStyle}
+                                labelStyle={style.chipLabelStyle}
+                                deleteIconStyle={style.chipDeleteIconStyle}
                             >
                                 {field}
                             </Chip>;
                         })}
                     </div>
-                    <div style={submitButtonsStyle}>
-                        <RaisedButton label="Cancel" onClick={this.cancelUpdates} style={{ marginRight: 10 }} />
+                    <div style={style.buttonContainer}>
+                        <RaisedButton label="Cancel" onClick={this.cancelUpdates} style={style.caneclButton} />
                         <RaisedButton label="Save" onClick={this.updateFilter} primary={true} />
                     </div>
                 </form>
