@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router';
 
-import { RaisedButton, IconMenu, MenuItem, Dialog, TextField, FlatButton } from 'material-ui';
+import { RaisedButton, IconMenu, MenuItem, Dialog, TextField, FlatButton, Snackbar } from 'material-ui';
 
 import * as contentActions from '../../actions/contentActions';
 import {
@@ -43,7 +43,14 @@ interface IPartnerConfigProps {
     actions: any;
 }
 
-class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedFilter: string, showDialog: boolean }> {
+interface IPartnerConfigState {
+    selectedFilter: string;
+    showDialog: boolean;
+    showSnackbar: boolean;
+    submitInProgress: boolean;
+}
+
+class PartnerConfigPage extends React.Component<IPartnerConfigProps, IPartnerConfigState> {
     private filters: any[];
     constructor(props, context) {
         super(props, context);
@@ -84,7 +91,7 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
             rowComponent: ConcatenatedFieldRow
         }];
 
-        this.state = { selectedFilter: '', showDialog: false };
+        this.state = { selectedFilter: '', showDialog: false, showSnackbar: false, submitInProgress: false };
 
         this.onSave = this.onSave.bind(this);
         this.onSaveNew = this.onSaveNew.bind(this);
@@ -93,6 +100,7 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
         this.getNewFilterForm = this.getNewFilterForm.bind(this);
         this.cancelDialog = this.cancelDialog.bind(this);
         this.submitDialog = this.submitDialog.bind(this);
+        this.hideSnackbar = this.hideSnackbar.bind(this);
     }
     public componentWillMount() {
         // Enable page reload. Fetch configs when page is reloaded.
@@ -113,11 +121,10 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
         this.setState({ showDialog: false });
     }
     private submitDialog(fileName) {
-        console.log('submit form validate');
-        console.log('push configs as anew file');
-        this.setState({ showDialog: false });
-        this.props.actions.createConfig(fileName, this.props.branch, this.props.config);
-        // this.props.actions.pushConfig(this.props.branch, this.props.config);
+        this.setState({ showDialog: false, submitInProgress: true });
+        this.props.actions.createConfig(fileName, this.props.branch, this.props.config).then(() => {
+            this.setState({ submitInProgress: false, showSnackbar: true });
+        });
     }
     private pushConfig() {
         const { search } = window.location;
@@ -126,9 +133,11 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
         const copyAsNew = params.get('copyasnew');
         if (copyAsNew) {
             this.setState({ showDialog: true });
-            console.log('show popup form');
         } else {
-            this.props.actions.pushConfig(this.props.branch, this.props.config);
+            this.setState({ submitInProgress: true });
+            this.props.actions.pushConfig(this.props.branch, this.props.config).then(() => {
+                this.setState({ showSnackbar: true, submitInProgress: false });
+            });
         }
     }
     public onSave(filterName, params) {
@@ -196,6 +205,9 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
         const filter = _.find(config.filters, { filter_name: 'split_by_position' });
         return (filter ? _.map(filter.params.fields, 'name') : []);
     }
+    private hideSnackbar() {
+        this.setState({ showSnackbar: false });
+    }
     public render(): JSX.Element {
         const config = this.props.config.config || { filters: [] };
         return (
@@ -222,8 +234,14 @@ class PartnerConfigPage extends React.Component<IPartnerConfigProps, { selectedF
                 </div>
 
                 <FileRenameDialog isOpen={this.state.showDialog} onCancel={this.cancelDialog} onSave={this.submitDialog} />
+                <Snackbar
+                    open={this.state.showSnackbar}
+                    message="Checked in config"
+                    autoHideDuration={4000}
+                    onRequestClose={this.hideSnackbar}
+                />
                 <div className="submit-buttons col-md-12 text-center" style={{ margin: '10px 0' }}>
-                    <RaisedButton label="Save" primary={true} onClick={this.pushConfig} style={{ margin: '0 5px' }} />
+                    <RaisedButton label={this.state.submitInProgress ? "Saving..." : "Save"} primary={true} onClick={this.pushConfig} style={{ margin: '0 5px' }} />
                 </div>
             </div>
         );
